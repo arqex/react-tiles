@@ -1,0 +1,28 @@
+.tilecontainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.tilecolumn {
+  height: 100%;
+  position: relative;
+  transition: width .3s, height .3s;
+  &>* {
+    width: 100% !important;
+  }
+}
+
+.tilerow {
+  transition: width .3s, height .3s;
+  &>* {
+    float:left;
+    height: 100% !important;
+  }
+}
+
+.singletile {
+  transition: width .3s, height .3s;
+  border: 1px solid red;
+}
