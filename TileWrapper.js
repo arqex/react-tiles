@@ -144,9 +144,14 @@ var TileWrapper = React.createClass({
         prevPercent -= nextPercentage;
       }
 
-      factor = (100 - nextPercent + remaining) /*current remaining*/ / (100 - updatingSizes.initialPercent) /*previous remaning*/;
+      factor = (100 - nextPercent + remaining) /*current remaining*/ - (100 - updatingSizes.initialPercent) /*previous remaning*/;
       for( i = separatorIndex + 1; i < sizes.length; i++ ){
-        nextSizes[i] = sizes[i] * factor;
+        if( i == separatorIndex + 1){
+          nextSizes[i] = sizes[i] + factor;
+        }
+        else {
+          nextSizes[i] = sizes[i];
+        }
       }
     }
     else {
@@ -163,9 +168,14 @@ var TileWrapper = React.createClass({
         prevPercent -= nextPercentage
       }
 
-      factor = (nextPercent + remaining) /*current remaining*/ / updatingSizes.initialPercent /*previous remaining*/;
+      factor = (nextPercent + remaining) /*current remaining*/ - updatingSizes.initialPercent /*previous remaining*/;
       for( i = separatorIndex; i >= 0; i-- ){
-        nextSizes[i] = sizes[i] * factor;
+        if( i == separatorIndex){
+          nextSizes[i] = sizes[i] + factor;
+        }
+        else {
+          nextSizes[i] = sizes[i];
+        }
       }
     }
 
