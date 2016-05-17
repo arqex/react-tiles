@@ -7,8 +7,8 @@ var Tile = React.createClass({
     var dimensions = this.props.dimensions;
 
     return (
-      <div className={ 'singletile ' + this.props.id } style={ this.props.dimensions }>
-        { this.props.route }
+      <div className={ 'singletile ' + this.props.layout.id } style={ this.props.dimensions }>
+        { this.props.layout.route }
       </div>
     )
   }

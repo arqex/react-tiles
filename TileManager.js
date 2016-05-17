@@ -17,16 +17,27 @@ var TileManager = React.createClass({
       dimensions: {
         height: window.innerHeight,
         width: window.innerWidth
-      }
+      },
+      resizing: false
     };
   },
 
   render(){
     window.queryBuilder = this.getQueryBuilder();
 
+    var className = 'tilecontainer';
+    if( this.state.resizing ){
+      className += ' tileresizing';
+    }
+
     return (
-      <div className="tilecontainer">
-        <TileWrapper {...this.props} {...this.state.layout} dimensions={ this.state.dimensions } />
+      <div className={ className }>
+        <TileWrapper {...this.props}
+          layout={this.state.layout}
+          dimensions={ this.state.dimensions }
+          onResizeStart={ this.setState.bind(this, {resizing: true}) }
+          onResizeEnd={ this.setState.bind(this, {resizing: false}) }
+        />
       </div>
     );
   },

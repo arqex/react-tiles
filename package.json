@@ -1,0 +1,28 @@
+{
+  "name": "react-tiles",
+  "version": "1.0.0",
+  "description": "Tiles in react",
+  "main": "TileManager.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arqex/react-tiles.git"
+  },
+  "keywords": [
+    "react",
+    "tiles"
+  ],
+  "author": "Javier Marquez <arqex.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/arqex/react-tiles/issues"
+  },
+  "homepage": "https://github.com/arqex/react-tiles#readme",
+  "dependencies": {
+    "object-assign": "^4.1.0",
+    "qs": "^6.2.0",
+    "rc-animate": "^2.0.3"
+  }
+}

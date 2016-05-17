@@ -16,6 +16,7 @@
 
 .tilerow {
   transition: width .3s, height .3s;
+  position: relative;
   &>* {
     float:left;
     height: 100% !important;
@@ -25,4 +26,54 @@
 .singletile {
   transition: width .3s, height .3s;
   border: 1px solid red;
+}
+
+.tileresizing {
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer */
+  -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
+  -webkit-user-select: none; /* Chrome, Safari, and Opera */
+  -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
+
+  .tilerow, .tilecolumn, .singletile {
+    transition: none;
+  }
+}
+
+.column-trans-enter {
+  height: 0 !important;
+  &.column-trans-enter-active {
+    height: 0;
+  }
+}
+.row-trans-enter {
+  width: 0 !important;
+  &.row-trans-enter-active {
+    width: auto !important;
+  }
+}
+
+.column-trans-leave {
+  height: 0 !important;
+}
+.row-trans-leave {
+  width: 0 !important;
+}
+
+.separator {
+  position: absolute;
+  background: blue;
+}
+
+.separator-row {
+  height: 100%;
+  width: 3px;
+  top: 0;
+  cursor: e-resize;
+}
+.separator-column {
+  width: 100%;
+  height: 3px;
+  left: 0;
+  cursor: n-resize;
 }
