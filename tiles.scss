@@ -26,6 +26,7 @@
 .singletile {
   transition: width .3s, height .3s;
   border: 1px solid red;
+  overflow: hidden;
 }
 
 .tileresizing {
@@ -62,7 +63,7 @@
 
 .separator {
   position: absolute;
-  background: blue;
+  /*background: blue;*/
 }
 
 .separator-row {
