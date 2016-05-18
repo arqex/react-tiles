@@ -8,23 +8,26 @@
 .tilecolumn {
   height: 100%;
   position: relative;
-  transition: width .3s, height .3s;
+  overflow: hidden;
+
   &>* {
+    transition: height .3s;
     width: 100% !important;
   }
 }
 
 .tilerow {
-  transition: width .3s, height .3s;
   position: relative;
+  overflow: hidden;
+
   &>* {
+    transition: width .3s;
     float:left;
     height: 100% !important;
   }
 }
 
 .singletile {
-  transition: width .3s, height .3s;
   border: 1px solid red;
   overflow: hidden;
 }
@@ -41,17 +44,11 @@
   }
 }
 
-.column-trans-enter {
+.tilecolumn.tileentered>.tileentering {
   height: 0 !important;
-  &.column-trans-enter-active {
-    height: 0;
-  }
 }
-.row-trans-enter {
+.tilerow.tileentered>.tileentering {
   width: 0 !important;
-  &.row-trans-enter-active {
-    width: auto !important;
-  }
 }
 
 .column-trans-leave {

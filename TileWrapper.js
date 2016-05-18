@@ -19,7 +19,8 @@ var TileWrapper = React.createClass({
     return {
       sizes: this.getInitialSizes( this.props.layout.children.length ),
       updatingSizes: false,
-      resizing: false
+      resizing: false,
+      firstRendering: true
     };
   },
   getInitialSizes( count ){
@@ -38,7 +39,8 @@ var TileWrapper = React.createClass({
         'tilewrapper',
         'tile' + this.props.layout.type,
         this.props.layout.id,
-        this.state.updatingSizes ? 'tileResizing' : ''
+        this.state.updatingSizes ? 'tileResizing' : '',
+        this.state.firstRendering ? 'tileentering' : 'tileentered',
       ].join(' '),
       dimensions = this.props.dimensions,
       style
@@ -58,7 +60,7 @@ var TileWrapper = React.createClass({
     }
 
     return (
-      <Animate component="div" className={ wrapperClass } style={ style } transitionName={ this.props.layout.type + '-trans' }>
+      <Animate ref="animate" component="div" className={ wrapperClass } style={ style } transitionName={ this.props.layout.type + '-trans' }>
         { this.renderChildren() }
         { this.renderSeparators() }
       </Animate>
@@ -236,8 +238,15 @@ var TileWrapper = React.createClass({
   componentWillReceiveProps: function( nextProps ){
     var childrenCount = nextProps.layout.children.length;
     if( childrenCount !== this.props.layout.children.length ){
-      this.setState({ sizes: this.getInitialSizes(childrenCount) });
+      this.setState({ sizes: this.getInitialSizes(childrenCount), entering: true });
     }
+
+  },
+  componentDidMount: function(){
+    var me = this;
+    setTimeout( function(){
+      me.setState({firstRendering: false});
+    });
   }
 });
 
