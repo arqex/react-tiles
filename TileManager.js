@@ -13,6 +13,10 @@ var TileManager = React.createClass({
   getInitialState: function(){
     TileManager.getQueryBuilder = this.getQueryBuilder;
 
+    TileManager.getWrapperInfo = id => {
+      return this.getQueryBuilder().getWrapperInfo( id );
+    }
+
     return {
       layout: UrlParser.parse( this.getRoute() ),
       currentLocation: location.href,
@@ -83,7 +87,5 @@ var TileManager = React.createClass({
     return queryBuilder;
   }
 });
-
-
 
 module.exports = TileManager;

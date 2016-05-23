@@ -144,6 +144,10 @@ assign( TileQueryBuilder.prototype, {
     }
 
     return this.layoutToPath( nextLayout, ops.update );
+  },
+  getWrapperInfo: function( id ){
+    var index = findIndex( this.layout, id );
+    return index !== -1 && cloneLayout( this.layout.children[index] );
   }
 });
 
