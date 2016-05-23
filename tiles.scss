@@ -1,3 +1,5 @@
+$time: .3s;
+
 .tilecontainer {
   position: relative;
   width: 100%;
@@ -10,9 +12,14 @@
   position: relative;
   overflow: hidden;
 
-  &>* {
-    transition: height .3s;
+  &>.tilewrapper, &>.singletile {
+    transition: height $time;
     width: 100% !important;
+
+    border-top: 3px solid #ccc;
+    &:first-child {
+      border-top: 0;
+    }
   }
 }
 
@@ -20,16 +27,28 @@
   position: relative;
   overflow: hidden;
 
-  &>* {
-    transition: width .3s;
+  &>.tilewrapper, &>.singletile {
+    transition: width $time;
     float:left;
+
+    border-left: 3px solid #ccc;
+    &:first-child {
+      border-left: 0;
+    }
+  }
+
+  &>.singletile {
     height: 100% !important;
   }
 }
 
+.tilefree, .tilefreeChild {
+  transition: width $time, height $time;
+}
+
 .singletile {
-  border: 1px solid red;
   overflow: hidden;
+  border: 1px solid red;
 }
 
 .tileresizing {
@@ -39,7 +58,7 @@
   -webkit-user-select: none; /* Chrome, Safari, and Opera */
   -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
 
-  .tilerow, .tilecolumn, .singletile {
+  .tilerow, .tilecolumn, .singletile, .separator {
     transition: none;
   }
 }
@@ -60,7 +79,6 @@
 
 .separator {
   position: absolute;
-  /*background: blue;*/
 }
 
 .separator-row {

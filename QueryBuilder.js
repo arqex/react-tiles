@@ -33,38 +33,7 @@ assign( TileQueryBuilder.prototype, {
     return this.layoutToPath( layout, ops.update );
   },
 
-  addTile: function( ops ){
-    this.handleErrors( 'addTile', ops );
-
-    var found = find( this.layout, ops.target );
-    if( !found ){
-      this.throwError('`addTile` could not find the target.');
-    }
-
-    var pos = ops.position !== undefined ? ops.position : found[0].children.length;
-    found[0].children.splice( pos, 0, createTile( ops ) );
-
-    return this.layoutToPath( found[1], ops.update );
-  },
-
-  addTileAndWrapper( ops ){
-    this.handleErrors( 'addWrapper', ops );
-
-    var pos = ops.position !== undefined ? ops.position : this.layout.children.length,
-      type = this.layout.type === 'row' ? 'column' : 'row',
-      layout = cloneLayout( this.layout )
-    ;
-
-    layout.children.splice( pos, 0, {
-      type: type,
-      id: ops.id || utils.tid(type[0]),
-      children: [ createTile( ops.tile ) ]
-    });
-
-    return this.layoutToPath( layout, ops.update );
-  },
-
-  removeTile( id, update ){
+  removeTile: function( id, update ){
     if( !id ){
       this.throwError("`removeTile` needs a tile id.");
     }
@@ -94,23 +63,7 @@ assign( TileQueryBuilder.prototype, {
     return this.layoutToPath( found[1], update );
   },
 
-  setTileRoute( id, route, update ){
-    if( !id || !route ){
-      this.throwError("`setTileRoute` needs a tile id and a route.");
-    }
-
-    var found = find( this.layout, id );
-
-    if( !found ){
-      return console.log("Tile " + id + " not found to set the route." );
-    }
-
-    found[0].route = route;
-
-    return this.layoutToPath( found[1], update );
-  },
-
-  resetWrapper( id, tile, update ){
+  resetWrapper: function( id, tile, update ){
     if( !id || !tile || !tile.route ){
       this.throwError("`resetWrapper` needs a wrapper id and a new tile data with a route.");
     }
@@ -130,30 +83,15 @@ assign( TileQueryBuilder.prototype, {
     if( !payload ){
       this.throwError( '`' + type + '` called without parameters.' );
     }
-    if( type === 'addTitle' ){
+    if( type === 'setTile' ){
       if( !payload.route ){
-        this.throwError('`addTile` needs a route.');
+        this.throwError('`setTile` needs a route.');
       }
       else if( !payload.target ){
-        this.throwError('`addTile` needs a target.');
+        this.throwError('`setTile` needs a target.');
       }
-      else if( this.layout.type === 'free' ){
+      else if( this.layout.type === 'free' && !payload.type ){
         this.throwError('A column or row layout is needed to add a tile.');
-      }
-    }
-    if( type === 'addWrapper' ){
-      var currentType = this.layout.type;
-      if( !payload.tile ){
-        this.throwError('`addTileAndWrapper` needs tile information.');
-      }
-      if( !payload.tile.route ){
-        this.throwError('`addTileAndWrapper` needs a tile route.');
-      }
-      if( currentType === 'free' && payload.type !== 'column' && payload.type !== 'row' ){
-        this.throwError('`addTileAndWrapper` needs a valid wrapper type (column or row) because the layout is free.');
-      }
-      if( payload.type && (currentType === 'column' && payload.type !== 'row' || currentType === 'row' && payload.type !== 'column' )){
-        this.throwError('Current ' + currentType + ' layout does not accept wrappers of type ' + payload.type );
       }
     }
   },
@@ -166,6 +104,46 @@ assign( TileQueryBuilder.prototype, {
       this.setRoute( q );
     }
     return q;
+  },
+
+  setTile: function( ops ){
+    this.handleErrors('setTile', ops);
+    var nextLayout = assign({}, this.layout, {children: this.layout.children.slice()});
+    var wrapperIndex = findIndex( nextLayout, ops.target );
+    var position, wrapper;
+
+    if( wrapperIndex === -1 ){
+      // Wrapper not found
+      position = ops.targetPosition !== undefined ? ops.targetPosition : nextLayout.children.length;
+      wrapper = {
+        id: ops.target,
+        children: []
+      };
+
+      if( nextLayout.type === 'free' ){
+        nextLayout.type = ops.type === 'row' ? 'column' : 'row';
+        wrapper.type = ops.type;
+      }
+      else {
+        wrapper.type = nextLayout.children[0].type;
+      }
+      nextLayout.children.splice( position, 0, wrapper );
+    }
+    else {
+      wrapper = assign({}, nextLayout.children[wrapperIndex], {children: nextLayout.children[wrapperIndex].children.slice()});
+      nextLayout.children[wrapperIndex] = wrapper;
+    }
+
+    var tileIndex = findIndex( wrapper, ops.id );
+    if( tileIndex === -1 ){
+      position = ops.position !== undefined ? ops.position : wrapper.children.length;
+      wrapper.children.splice(position, 0, createTile( ops ) );
+    }
+    else {
+      wrapper.children[tileIndex].route = ops.route;
+    }
+
+    return this.layoutToPath( nextLayout, ops.update );
   }
 });
 
@@ -206,31 +184,22 @@ var cloneLayout = function( l ){
   return clone;
 };
 
-var find = function( originalLayout, id, parent ){
-  var layout = cloneLayout( originalLayout ),
-    i = layout.children.length,
-    found = 0,
-    j
-  ;
 
-  while( i-- > 0 && !found ){
+var findIndex = function( layout, id ){
+  if( !id ){
+    return -1;
+  }
+
+  var i = layout.children.length;
+  while( i-- > 0 ){
     if( layout.children[i].id === id ){
-      layout.children[i] = cloneLayout( layout.children[i] );
-      return [layout.children[i], layout];
-    }
-
-    j = layout.children[i].children.length;
-    while( j-- > 0 && !found ){
-      if( layout.children[i].children[j].id === id ){
-        layout.children[i] = cloneLayout( layout.children[i] );
-        if( parent ){
-          return [layout.children[i], layout, j];
-        }
-        return [layout.children[i].children[j], layout];
-      }
+      return i;
     }
   }
-}
+
+  return -1;
+};
+
 
 var createTile = function( ops ){
   return {
@@ -238,4 +207,4 @@ var createTile = function( ops ){
     route: ops.route,
     type: 'tile'
   };
-}
+};

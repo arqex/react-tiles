@@ -11,6 +11,8 @@ require('./tiles.scss');
 
 var TileManager = React.createClass({
   getInitialState: function(){
+    TileManager.getQueryBuilder = this.getQueryBuilder;
+
     return {
       layout: UrlParser.parse( this.getRoute() ),
       currentLocation: location.href,

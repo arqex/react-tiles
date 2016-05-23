@@ -31,7 +31,16 @@ var UrlParser = {
     else {
       layout = {
         type: 'free',
-        children: [{type: 'tile', route: path, id: utils.tid('t')}]
+        id: 'm', // after main
+        children: [{
+          type: 'freeChild',
+          id: 'mc', // after main child
+          children: [{
+            type: 'tile',
+            route: path,
+            id: 'mct'
+          }]
+        }]
       };
     }
 
