@@ -5,7 +5,7 @@ var qs = require('qs'),
 var UrlParser = {
   stringify: function( layout ){
     if( layout.type === 'tile' ){
-      return layout.id + ':' + encodeURIComponent(layout.route);
+      return layout.id + ':' + encodeURIComponent(encodeURIComponent(layout.route));
     }
 
     var me = this,

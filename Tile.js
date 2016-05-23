@@ -1,5 +1,6 @@
 var React = require('react'),
-  Router = require('react-router')
+  Router = require('react-router'),
+  IframeTile = require('./IframeTile')
 ;
 
 var Tile = React.createClass({
@@ -15,12 +16,17 @@ var Tile = React.createClass({
       C = this.state.C,
       content
     ;
-    if( this.state.C ){
+
+    if( C ){
       content = <C {...this.props} />;
     }
 
     if( this.state.firstRendering ){
       className += ' tileentering';
+    }
+
+    if( C === IframeTile ){
+      className += ' tileiframe';
     }
 
     return (
@@ -44,7 +50,14 @@ var Tile = React.createClass({
     }
   },
   updateRouteComponent: function(){
-    var me = this;
+    var me = this,
+      route = this.props.layout.route
+    ;
+
+    if( route.match(/https?:\/\//i) ){
+      return me.setState({C: IframeTile});
+    }
+
     Router.match({ routes: this.props.routes, location: this.props.layout.route }, function(error, redirection, state){
       console.log( state.routes );
       var C = state.routes[1].component;
