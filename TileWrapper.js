@@ -93,10 +93,12 @@ var TileWrapper = React.createClass({
         }
       }
 
+      console.log( child );
       return <Component {...props}
         layout={child}
         key={ child.id }
         dimensions={ dimensions }
+        wrapperId={ layout.id }
         onResizeStart={ me.props.onResizeStart.bind( me ) }
         onResizeEnd={ me.props.onResizeEnd.bind( me ) } />;
     });
@@ -235,6 +237,7 @@ var TileWrapper = React.createClass({
       window.removeEventListener( 'mouseup', mu );
     });
   },
+  
   componentWillReceiveProps: function( nextProps ){
     var childrenCount = nextProps.layout.children.length;
     if( childrenCount !== this.props.layout.children.length ){

@@ -103,7 +103,7 @@ assign( TileQueryBuilder.prototype, {
     if( update ){
       this.setRoute( q );
     }
-    return q;
+    return pathFormat + q;
   },
 
   setTile: function( ops ){
@@ -140,7 +140,7 @@ assign( TileQueryBuilder.prototype, {
       wrapper.children.splice(position, 0, createTile( ops ) );
     }
     else {
-      wrapper.children[tileIndex].route = ops.route;
+      wrapper.children[tileIndex] = assign({}, wrapper.children[tileIndex], {route: ops.route});
     }
 
     return this.layoutToPath( nextLayout, ops.update );
@@ -150,6 +150,11 @@ assign( TileQueryBuilder.prototype, {
     return index !== -1 && cloneLayout( this.layout.children[index] );
   }
 });
+
+var pathFormat = '';
+TileQueryBuilder.setPathFormat = function( format ){
+  pathFormat = format;
+}
 
 module.exports = TileQueryBuilder;
 

@@ -7,7 +7,18 @@ var Tile = React.createClass({
   getInitialState: function(){
     return {
       firstRendering: true,
+      route: this.props.layout.route,
       C: false
+    };
+  },
+  childContextTypes: {
+    tileLayout: React.PropTypes.object,
+    wrapperId: React.PropTypes.string
+  },
+  getChildContext: function(){
+    return {
+      tileLayout: this.props.layout,
+      wrapperId: this.props.wrapperId
     };
   },
   render: function(){
@@ -16,6 +27,8 @@ var Tile = React.createClass({
       C = this.state.C,
       content
     ;
+
+    console.log( this.props.layout );
 
     if( C ){
       content = <C {...this.props} />;
@@ -42,27 +55,32 @@ var Tile = React.createClass({
     setTimeout( function(){
       me.setState({firstRendering: false});
     });
-    this.updateRouteComponent();
+    this.updateRouteComponent( this.props );
   },
-  componentDidUpdate: function( prevProps ){
-    if( this.props.layout.route !== prevProps.layout.route ){
-      this.updateRouteComponent();
+
+  componentWillReceiveProps( nextProps ){
+    console.log("NOW:", this.state.route, "NEXT:" + nextProps.layout.route );
+    if( this.state.route !== nextProps.layout.route ){
+      this.updateRouteComponent( nextProps );
     }
   },
-  updateRouteComponent: function(){
+
+  updateRouteComponent: function( props ){
     var me = this,
-      route = this.props.layout.route
+      route = props.layout.route
     ;
 
     if( route.match(/https?:\/\//i) ){
       return me.setState({C: IframeTile});
     }
 
-    Router.match({ routes: this.props.routes, location: this.props.layout.route }, function(error, redirection, state){
-      console.log( state.routes );
+    Router.match({ routes: props.routes, location: props.layout.route }, function(error, redirection, state){
       var C = state.routes[1].component;
       if( me.state.C !== C ){
-        me.setState({C:C});
+        me.setState({
+          C: C,
+          route: route
+        });
       }
     })
   }

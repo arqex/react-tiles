@@ -4,6 +4,7 @@ var React = require('react'),
   UrlParser = require('./UrlParser'),
   TileWrapper = require('./TileWrapper'),
   QueryBuilder = require('./QueryBuilder'),
+  TileLink = require('./TileLink'),
   qs = require('qs')
 ;
 
@@ -16,6 +17,8 @@ var TileManager = React.createClass({
     TileManager.getWrapperInfo = id => {
       return this.getQueryBuilder().getWrapperInfo( id );
     }
+
+    this.setPathFormat();
 
     return {
       layout: UrlParser.parse( this.getRoute() ),
@@ -75,8 +78,9 @@ var TileManager = React.createClass({
   },
   componentDidUpdate(){
     if( this.state.currentLocation !== location.href ){
+      var layout = UrlParser.parse(this.getRoute());
       this.setState({
-        layout: UrlParser.parse(this.getRoute()),
+        layout: layout,
         currentLocation: location.href
       });
     }
@@ -85,7 +89,16 @@ var TileManager = React.createClass({
     var queryBuilder = new QueryBuilder('/');
     queryBuilder.setLayout( this.state.layout );
     return queryBuilder;
+  },
+  setPathFormat(){
+    var routeParts = location.href.split(location.host);
+    if( routeParts[1] && routeParts[1].slice(0,2) === '/#' ){
+      QueryBuilder.setPathFormat('/#');
+    }
   }
 });
+
+TileManager.Link = TileLink;
+TileLink.setManager( TileManager );
 
 module.exports = TileManager;
