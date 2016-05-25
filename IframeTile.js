@@ -2,15 +2,12 @@ var React = require('react'),
   Router = require('react-router')
 ;
 
-var Tile = React.createClass({
+var IframeTile = React.createClass({
   render: function(){
     return (
-      <div className="tileiframeContainer">
-        <div className="tileiframeOverlay"></div>
-        <iframe src={ this.props.layout.route } />
-      </div>
+      <iframe src={ this.props.layout.route } />
     )
   }
 });
 
-module.exports = Tile;
+module.exports = IframeTile;

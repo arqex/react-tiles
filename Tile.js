@@ -44,6 +44,10 @@ var Tile = React.createClass({
 
     return (
       <div className={ className } style={ this.props.dimensions }>
+        <div className="tilecontrols">
+          <a onClick={ () => this.closeTile() }>x</a>
+        </div>
+        <div className="tileiframeOverlay"></div>
         <div className="tilecontent">
           { content }
         </div>
@@ -83,6 +87,11 @@ var Tile = React.createClass({
         });
       }
     })
+  },
+  closeTile: function(){
+    var builder = require('./TileManager').getQueryBuilder();
+    var url = builder.remove( this.props.layout.id );
+    location.href = url;
   }
 });
 
