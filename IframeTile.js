@@ -5,7 +5,10 @@ var React = require('react'),
 var Tile = React.createClass({
   render: function(){
     return (
-      <iframe src={ this.props.layout.route } />
+      <div className="tileiframeContainer">
+        <div className="tileiframeOverlay"></div>
+        <iframe src={ this.props.layout.route } />
+      </div>
     )
   }
 });

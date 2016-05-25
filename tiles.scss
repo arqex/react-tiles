@@ -98,10 +98,19 @@ $time: .3s;
   .tilecontent {
     height: 100%;
   }
-  
-  iframe {
+
+  iframe, .tileiframeContainer, .tileiframeOverlay {
     width: 100%;
     height: 100%;
     border: 0;
   }
+}
+
+.tileiframeOverlay {
+  position: absolute;
+  z-index: -1;
+}
+
+.tileresizing .tileiframeOverlay {
+  z-index: 1;
 }
