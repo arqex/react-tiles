@@ -123,11 +123,15 @@ var UrlParser = {
 
   parseId( token ){
     var parts = token.value.split(':');
+
     if( parts.length !== 2 ){
       throw this.getError('Id ' + token.value + ' not valid.');
     }
 
-    var layout = {};
+    var layout = {
+      id: parts[1]
+    };
+
     if( parts[0] === 'c' ){
       layout.type = 'column';
     }
@@ -135,14 +139,15 @@ var UrlParser = {
       layout.type = 'row';
     }
     else {
-      return {
+      layout = {
         type: 'tile',
         id: parts[0],
         route: decodeURIComponent(parts[1])
       };
     }
 
-    layout.id = parts[1];
+    utils.updateTid( layout.id );
+
     return layout;
   },
 
