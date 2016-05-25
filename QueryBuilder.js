@@ -105,7 +105,7 @@ assign( TileQueryBuilder.prototype, {
   },
   layoutToPath: function( layout, update ){
     if( layout.type === 'free' ){
-      return pathFormat + layout.children[0].children[0].route;
+      return pathFormat + layout.children[0].children[0].route + '?tw=' + layout.id + ':' + layout.children[0].id;
     }
 
     var q = layout.path + '?t=' + UrlParser.stringify( layout );
@@ -136,7 +136,7 @@ assign( TileQueryBuilder.prototype, {
           wrapper.children[0] = cloneLayout( wrapper.children[0] );
           wrapper.children[0].route = ops.route;
           nextLayout.children[0] = wrapper;
-          
+
           return this.layoutToPath( nextLayout, ops.update );
         }
         nextLayout.type = ops.type === 'row' ? 'column' : 'row';

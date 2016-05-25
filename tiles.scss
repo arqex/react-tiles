@@ -11,6 +11,7 @@ $time: .3s;
   height: 100%;
   position: relative;
   overflow: hidden;
+  float:left;
 
   &>.tilewrapper, &>.singletile {
     transition: height $time;
@@ -29,7 +30,6 @@ $time: .3s;
 
   &>.tilewrapper, &>.singletile {
     transition: width $time;
-    float:left;
 
     border-left: 3px solid #ccc;
     &:first-child {
@@ -39,11 +39,13 @@ $time: .3s;
 
   &>.singletile {
     height: 100% !important;
+    float: left;
   }
 }
 
 .tilefree, .tilefreeChild {
   transition: width $time, height $time;
+  float: left;
 }
 
 .singletile {

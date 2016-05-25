@@ -29,12 +29,24 @@ var UrlParser = {
       layout = this.parseQuery( query.t )
     }
     else {
+      // wrapper ids
+      var layoutId = 'm', // after main
+        wrapperId = 'mc', // after main child
+        ids
+      ;
+      if( query.tw ){
+        ids = query.tw.split(':');
+        if( ids.length == 2 ){
+          layoutId = ids[0];
+          wrapperId = ids[1];
+        }
+      }
       layout = {
         type: 'free',
-        id: 'm', // after main
+        id: layoutId,
         children: [{
           type: 'freeChild',
-          id: 'mc', // after main child
+          id: wrapperId,
           children: [{
             type: 'tile',
             route: path,
