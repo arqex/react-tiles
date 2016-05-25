@@ -32,13 +32,15 @@ var UrlParser = {
       // wrapper ids
       var layoutId = 'm', // after main
         wrapperId = 'mc', // after main child
+        tileId = 'mct',
         ids
       ;
       if( query.tw ){
         ids = query.tw.split(':');
-        if( ids.length == 2 ){
+        if( ids.length == 3 ){
           layoutId = ids[0];
           wrapperId = ids[1];
+          tileId = ids[2];
         }
       }
       layout = {
@@ -50,7 +52,7 @@ var UrlParser = {
           children: [{
             type: 'tile',
             route: path,
-            id: 'mct'
+            id: tileId
           }]
         }]
       };

@@ -105,7 +105,9 @@ assign( TileQueryBuilder.prototype, {
   },
   layoutToPath: function( layout, update ){
     if( layout.type === 'free' ){
-      return pathFormat + layout.children[0].children[0].route + '?tw=' + layout.id + ':' + layout.children[0].id;
+      return pathFormat + layout.children[0].children[0].route +
+        '?tw=' + layout.id + ':' + layout.children[0].id + ':' + layout.children[0].children[0].id
+      ;
     }
 
     var q = layout.path + '?t=' + UrlParser.stringify( layout );

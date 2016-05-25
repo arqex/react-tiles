@@ -12,6 +12,7 @@ $time: .3s;
   position: relative;
   overflow: hidden;
   float:left;
+  transition: width $time;
 
   &>.tilewrapper, &>.singletile {
     transition: height $time;
@@ -22,15 +23,19 @@ $time: .3s;
       border-top: 0;
     }
   }
+
+  &.tilewrapper-leave {
+    width: 0 !important;
+  }
 }
 
 .tilerow {
   position: relative;
   overflow: hidden;
+  transition: height $time;
 
   &>.tilewrapper, &>.singletile {
     transition: width $time;
-
     border-left: 3px solid #ccc;
     &:first-child {
       border-left: 0;
@@ -40,6 +45,11 @@ $time: .3s;
   &>.singletile {
     height: 100% !important;
     float: left;
+  }
+
+
+  &.tilewrapper-leave {
+    height: 0 !important;
   }
 }
 
@@ -75,13 +85,6 @@ $time: .3s;
   height: 0 !important;
 }
 .tilerow.tileentered>.tileentering {
-  width: 0 !important;
-}
-
-.column-trans-leave {
-  height: 0 !important;
-}
-.row-trans-leave {
   width: 0 !important;
 }
 

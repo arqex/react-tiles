@@ -54,13 +54,13 @@ var TileWrapper = React.createClass({
     }
     else {
       style = {
-        height: this.isNumeric(dimensions.height) ? '100%' : dimensions.height,
+        height: this.isNumeric(dimensions.height) ? dimensions.height : dimensions.height,
         width: '100%'
       }
     }
 
     return (
-      <Animate ref="animate" component="div" className={ wrapperClass } style={ style } transitionName={ this.props.layout.type + '-trans' }>
+      <Animate ref="animate" component="div" className={ wrapperClass } style={ style } transitionName="tilewrapper">
         { this.renderChildren() }
         { this.renderSeparators() }
       </Animate>
@@ -237,7 +237,7 @@ var TileWrapper = React.createClass({
       window.removeEventListener( 'mouseup', mu );
     });
   },
-  
+
   componentWillReceiveProps: function( nextProps ){
     var childrenCount = nextProps.layout.children.length;
     if( childrenCount !== this.props.layout.children.length ){
