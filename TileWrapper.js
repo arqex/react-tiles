@@ -1,7 +1,8 @@
 var React = require('react'),
   ReactDom = require('react-dom'),
   Tile = require('./Tile'),
-  Animate = require('rc-animate')
+  Animate = require('rc-animate'),
+  utils = require('./TileUtils')
 ;
 
 var minSizes = {
@@ -93,12 +94,12 @@ var TileWrapper = React.createClass({
         }
       }
 
-      console.log( child );
       return <Component {...props}
         layout={child}
         key={ child.id }
         dimensions={ dimensions }
         wrapper={ layout }
+        resizing={ me.state.resizing }
         onResizeStart={ me.props.onResizeStart.bind( me ) }
         onResizeEnd={ me.props.onResizeEnd.bind( me ) } />;
     });
@@ -214,24 +215,30 @@ var TileWrapper = React.createClass({
       updatingSizes: updatingSizes,
       resizing: false
     });
-    console.log( updatingSizes );
+
 
     window.addEventListener( 'mousemove', mm = function( e ){
-      var sizes = me.state.updatingSizes;
-      var nextPercent = (e[dimension] - sizes.wrapperOffset) / sizes.wrapperSize * 100;
-      if( !me.state.resizing && Math.abs(sizes.startingPoint - e[dimension] ) > 5){
-        me.setState({resizing: true});
-        // console.log( 'Resizing', nextPercent );
-        me.calculateSizes( separatorIndex, nextPercent );
-      }
-      else if( me.state.resizing ){
-        // console.log( nextPercent );
-        me.calculateSizes( separatorIndex, nextPercent );
-      }
+      if( me.ticking ) return;
+
+      me.ticking = true;
+      utils.requestAnimationFrame( () => {
+        var sizes = me.state.updatingSizes;
+        var nextPercent = (e[dimension] - sizes.wrapperOffset) / sizes.wrapperSize * 100;
+        if( !me.state.resizing && Math.abs(sizes.startingPoint - e[dimension] ) > 5){
+          me.setState({resizing: true});
+          // console.log( 'Resizing', nextPercent );
+          me.calculateSizes( separatorIndex, nextPercent );
+        }
+        else if( me.state.resizing ){
+          // console.log( nextPercent );
+          me.calculateSizes( separatorIndex, nextPercent );
+        }
+        me.ticking = false;
+      });
     });
     window.addEventListener( 'mouseup', mu = function( e ){
       me.setState({updatingSizes: false, resizing: false});
-      console.log( me.state );
+
       me.props.onResizeEnd();
       window.removeEventListener( 'mousemove', mm );
       window.removeEventListener( 'mouseup', mu );

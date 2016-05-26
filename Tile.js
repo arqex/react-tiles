@@ -8,6 +8,7 @@ var Tile = React.createClass({
     return {
       firstRendering: true,
       route: this.props.layout.route,
+      isIframe: false,
       C: false
     };
   },
@@ -25,10 +26,8 @@ var Tile = React.createClass({
     var dimensions = this.props.dimensions,
       className = 'singletile ' + this.props.layout.id + ' ' + this.props.wrapper.type + 'singletile',
       C = this.state.C,
-      content
+      content, overlay
     ;
-
-    console.log( this.props.layout );
 
     if( C ){
       content = <C {...this.props} />;
@@ -42,15 +41,19 @@ var Tile = React.createClass({
       className += ' tileiframe';
     }
 
+    if( this.state.isIframe ){
+      overlay = <div className="tileiframeOverlay"></div>;
+    }
+
     return (
       <div className={ className } style={ this.props.dimensions }>
         <div className="tilecontrols">
           <a onClick={ () => this.closeTile() }>x</a>
         </div>
-        <div className="tileiframeOverlay"></div>
-        <div className="tilecontent">
+        { overlay }
+        <TileContent resizing={ this.props.resizing }>
           { content }
-        </div>
+        </TileContent>
       </div>
     )
   },
@@ -63,7 +66,6 @@ var Tile = React.createClass({
   },
 
   componentWillReceiveProps( nextProps ){
-    console.log("NOW:", this.state.route, "NEXT:" + nextProps.layout.route );
     if( this.state.route !== nextProps.layout.route ){
       this.updateRouteComponent( nextProps );
     }
@@ -75,7 +77,8 @@ var Tile = React.createClass({
     ;
 
     if( route.match(/https?:\/\//i) ){
-      return me.setState({C: IframeTile});
+      return me.setState({C: IframeTile, isIframe: true});
+
     }
 
     Router.match({ routes: props.routes, location: props.layout.route }, function(error, redirection, state){
@@ -83,7 +86,8 @@ var Tile = React.createClass({
       if( me.state.C !== C ){
         me.setState({
           C: C,
-          route: route
+          route: route,
+          isIframe: false
         });
       }
     })
@@ -94,5 +98,20 @@ var Tile = React.createClass({
     location.href = url;
   }
 });
+
+// This is a dumb component that prevents the content of a tile to be re-rendered
+// in a tile resize
+var TileContent = React.createClass({
+  render: function(){
+    return (
+      <div className="tilecontent">
+        { this.props.children }
+      </div>
+    );
+  },
+  shouldComponentUpdate: function(){
+    return !this.props.resizing;
+  }
+})
 
 module.exports = Tile;
