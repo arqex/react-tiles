@@ -18,12 +18,12 @@ var Tile = React.createClass({
   getChildContext: function(){
     return {
       tileLayout: this.props.layout,
-      wrapperId: this.props.wrapperId
+      wrapperId: this.props.wrapper.id
     };
   },
   render: function(){
     var dimensions = this.props.dimensions,
-      className = 'singletile ' + this.props.layout.id,
+      className = 'singletile ' + this.props.layout.id + ' ' + this.props.wrapper.type + 'singletile',
       C = this.state.C,
       content
     ;

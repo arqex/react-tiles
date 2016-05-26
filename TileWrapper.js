@@ -98,7 +98,7 @@ var TileWrapper = React.createClass({
         layout={child}
         key={ child.id }
         dimensions={ dimensions }
-        wrapperId={ layout.id }
+        wrapper={ layout }
         onResizeStart={ me.props.onResizeStart.bind( me ) }
         onResizeEnd={ me.props.onResizeEnd.bind( me ) } />;
     });

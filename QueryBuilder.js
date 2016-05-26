@@ -57,9 +57,11 @@ assign( TileQueryBuilder.prototype, {
           nextLayout.children[i] = wrapper;
         }
         if( nextLayout.children.length === 1 ){
-          nextLayout.type = 'free';
           nextLayout.children[0] = cloneLayout( nextLayout.children[0] );
-          nextLayout.children[0].type = 'freeChild';
+          if( nextLayout.children[0].children.length === 1 ){
+            nextLayout.type = 'free';
+            nextLayout.children[0].type = 'freeChild';
+          }
         }
         return this.layoutToPath( nextLayout, update );
       }

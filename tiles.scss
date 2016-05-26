@@ -29,6 +29,13 @@ $time: .3s;
   }
 }
 
+.rowsingletile.tilewrapper-leave {
+  width: 0 !important;
+}
+.columnsingletile.tilewrapper-leave {
+  height: 0 !important;
+}
+
 .tilerow {
   position: relative;
   overflow: hidden;
@@ -53,9 +60,14 @@ $time: .3s;
   }
 }
 
-.tilefree, .tilefreeChild {
+.tilefreeChild {
   transition: width $time, height $time;
   float: left;
+
+  &>.singletile {
+    transition: width $time, height $time;
+    float: left;
+  }
 }
 
 .singletile {

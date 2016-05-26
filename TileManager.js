@@ -5,6 +5,7 @@ var React = require('react'),
   TileWrapper = require('./TileWrapper'),
   QueryBuilder = require('./QueryBuilder'),
   TileLink = require('./TileLink'),
+  utils = require('./TileUtils'),
   qs = require('qs')
 ;
 
@@ -53,6 +54,16 @@ var TileManager = React.createClass({
 
   componentDidMount(){
     this.setState({ dimensions: this.calculateDimensions() });
+    window.addEventListener( 'resize', () => {
+      if( this.ticking ){
+        return;
+      }
+      this.ticking = true;
+      utils.requestAnimationFrame( () => {
+        this.setState({ dimensions: this.calculateDimensions() });
+        this.ticking = false;
+      });
+    });
   },
 
   calculateDimensions(){
