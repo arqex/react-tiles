@@ -18,22 +18,22 @@ assign( TileQueryBuilder.prototype, {
     this.layout = layout;
   },
 
-  toColumnLayout: function( options ){
+  toColumnLayout: function( options, returnLayout ){
     var ops = options || {},
       layout = toLayout( this.layout, 'column', ops )
     ;
 
-    return this.layoutToPath( layout, ops.update );
+    return this.layoutToPath( layout, ops.update, returnLayout );
   },
 
-  toRowLayout: function( options ){
+  toRowLayout: function( options, returnLayout ){
     var ops = options || {},
       layout = toLayout( this.layout, 'row', ops )
     ;
-    return this.layoutToPath( layout, ops.update );
+    return this.layoutToPath( layout, ops.update, returnLayout );
   },
 
-  remove: function( id, update ){
+  remove: function( id, update, returnLayout ){
     if( !id ){
       this.throwError("`removeTile` needs a tile id.");
     }
@@ -63,14 +63,14 @@ assign( TileQueryBuilder.prototype, {
             nextLayout.children[0].type = 'freeChild';
           }
         }
-        return this.layoutToPath( nextLayout, update );
+        return this.layoutToPath( nextLayout, update, returnLayout );
       }
     }
 
-    return this.layoutToPath( this.layout, update );
+    return this.layoutToPath( this.layout, update, returnLayout );
   },
 
-  resetWrapper: function( id, tile, update ){
+  resetWrapper: function( id, tile, update, returnLayout ){
     if( !id || !tile || !tile.route ){
       this.throwError("`resetWrapper` needs a wrapper id and a new tile data with a route.");
     }
@@ -83,7 +83,7 @@ assign( TileQueryBuilder.prototype, {
 
     found[0].children = [ createTile(tile) ];
 
-    return this.layoutToPath( found[1], update );
+    return this.layoutToPath( found[1], update, returnLayout );
   },
 
   handleErrors( type, payload ){
@@ -97,7 +97,7 @@ assign( TileQueryBuilder.prototype, {
       else if( !payload.target ){
         this.throwError('`setTile` needs a target.');
       }
-      else if( this.layout.type === 'free' && !payload.type && payload.target !== this.layout.children[0].id ){
+      else if( this.layout.type === 'free' && !payload.type && payload.target !== this.layout.children[0].id && payload.target !== 'floating' ){
         this.throwError('A column or row layout is needed to add a tile.');
       }
     }
@@ -105,14 +105,29 @@ assign( TileQueryBuilder.prototype, {
   throwError: function( reason ){
     throw new Error( 'QueryBuilder ERROR: ' + reason );
   },
-  layoutToPath: function( layout, update ){
-    if( layout.type === 'free' ){
-      return pathFormat + layout.children[0].children[0].route +
-        '?tw=' + layout.id + ':' + layout.children[0].id + ':' + layout.children[0].children[0].id
-      ;
+  layoutToPath: function( layout, update, returnLayout ){
+    if( returnLayout ){
+      if( update ){
+        this.layout = layout;
+      }
+      return layout;
     }
 
-    var q = layout.path + '?t=' + UrlParser.stringify( layout );
+    var q, floating;
+    if( layout.type === 'free' ){
+      floating = UrlParser.stringifyFloating( layout );
+      q = layout.children[0].children[0].route +
+        '?tw=' + layout.id + ':' + layout.children[0].id + ':' + layout.children[0].children[0].id
+      ;
+
+      if( floating ){
+        q += '&ft=' + floating;
+      }
+    }
+    else {
+      q = layout.path + '?t=' + UrlParser.stringify( layout );
+    }
+
     if( update ){
       this.setRoute( q );
     }
@@ -120,9 +135,16 @@ assign( TileQueryBuilder.prototype, {
     return pathFormat + q;
   },
 
-  setTile: function( ops ){
+  setTile: function( ops, returnLayout ){
     this.handleErrors('setTile', ops);
     var nextLayout = cloneLayout( this.layout );
+
+    if( ops.target === 'floating' ){
+      nextLayout.floating = assign({}, nextLayout.floating);
+      nextLayout.floating[ ops.id ] = ops.route;
+      return this.layoutToPath( nextLayout, ops.update, returnLayout );
+    }
+
     var wrapperIndex = findIndex( nextLayout, ops.target );
     var position, wrapper;
 
@@ -141,7 +163,7 @@ assign( TileQueryBuilder.prototype, {
           wrapper.children[0].route = ops.route;
           nextLayout.children[0] = wrapper;
 
-          return this.layoutToPath( nextLayout, ops.update );
+          return this.layoutToPath( nextLayout, ops.update, returnLayout );
         }
         nextLayout.type = ops.type === 'row' ? 'column' : 'row';
         wrapper.type = ops.type;
@@ -165,11 +187,39 @@ assign( TileQueryBuilder.prototype, {
       wrapper.children[tileIndex] = assign({}, wrapper.children[tileIndex], {route: ops.route});
     }
 
-    return this.layoutToPath( nextLayout, ops.update );
+    return this.layoutToPath( nextLayout, ops.update, returnLayout );
   },
   getWrapperInfo: function( id ){
     var index = findIndex( this.layout, id );
     return index !== -1 && cloneLayout( this.layout.children[index] );
+  },
+
+  setFloating: function( id, update, returnLayout ){
+
+    // Needs to get the layout from remove
+    var i = this.layout.children.length,
+      found = false,
+      tileIndex
+    ;
+
+    if( this.layout.floating[id] ){
+      return this.layoutToPath( cloneLayout(this.layout), update, returnLayout );
+    }
+
+    while( i-- > 0 && !found ){
+      tileIndex = findIndex( nextLayout.children[i], id );
+      if( tileIndex !== -1 ){
+        found = nextLayout.children[ i ].children[ tileIndex ];
+      }
+    }
+
+    if( !found ){
+      this.throwError("`setFloating` tile " + id  + " not found.");
+    }
+
+    var nextLayout = this.remove( id, false, true );
+    nextLayout.floating[ id ] = found.route;
+    return this.layoutToPath( nextLayout, update, returnLayout );
   }
 });
 

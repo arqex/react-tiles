@@ -14,8 +14,16 @@ var UrlParser = {
       })
     ;
 
-    var str = (layout.type === 'row' ? 'r' : 'c');
-    return str + ':' + layout.id + '{' + children.join(',') + '}';
+    var str = (layout.type === 'row' ? 'r' : 'c'),
+      query = str + ':' + layout.id + '{' + children.join(',') + '}',
+      floating = this.stringifyFloating( layout )
+    ;
+
+    if( floating ){
+      query += '&' + floating;
+    }
+
+    return query;
   },
 
   parse: function( route ){
@@ -58,11 +66,25 @@ var UrlParser = {
       };
     }
 
+    // floating tiles are in the format {id:route}
+    layout.floating = this.parseFloating( query.ft );
+
     layout.route = path;
     layout.path = parts[0];
     layout.query = query.t;
 
     return layout;
+  },
+
+  stringifyFloating: function( layout ){
+    if(!layout.floating){
+      return false;
+    }
+    var floating = [];
+    Object.keys(layout.floating).forEach( function( tid ){
+      floating.push( tid + ':' + encodeURIComponent(encodeURIComponent(layout.floating[tid])) );
+    });
+    return floating.join(',');
   },
 
   parseQuery: function( tileQuery ){
@@ -189,6 +211,23 @@ var UrlParser = {
 
   getError: function(msg) {
       return new Error("Tile query parse error: " + msg);
+  },
+
+  parseFloating: function( param ){
+    if( !param ) return {};
+    var tiles = param.split(','),
+      floating = {},
+      parts
+    ;
+
+    for( var i = 0; i<tiles.length-1; i-- ){
+      parts = tile[i].split(':');
+      if( parts.length == 2 ){
+        floating[ parts[0] ] = parts[1];
+      }
+    }
+
+    return floating;
   }
 };
 
