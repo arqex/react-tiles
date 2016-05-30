@@ -5,11 +5,6 @@ var React = require('react'),
   utils = require('./TileUtils')
 ;
 
-var minSizes = {
-  column: 200, // For column wrappers this is the minimun height of a row
-  row: 320 // For row wrappers this is the minumum width of a column
-};
-
 var sizeTypes = {
   column: 'clientHeight',
   row: 'clientWidth'
@@ -100,6 +95,7 @@ var TileWrapper = React.createClass({
         dimensions={ dimensions }
         wrapper={ layout }
         resizing={ me.state.resizing }
+        onDragStart={ function(){} }
         onResizeStart={ me.props.onResizeStart.bind( me ) }
         onResizeEnd={ me.props.onResizeEnd.bind( me ) } />;
     });
@@ -197,7 +193,7 @@ var TileWrapper = React.createClass({
         wrapperOffset: wrapper[offset],
         wrapperSize: wrapper[size],
         separatorIndex: separatorIndex,
-        minPercentage: minSizes[ this.props.layout.type ] / wrapper[size] * 100,
+        minPercentage: this.minSizes[ this.props.layout.type ] / wrapper[size] * 100,
         sizes: this.state.sizes,
         startingPoint: e[dimension],
         initialPercent: 0

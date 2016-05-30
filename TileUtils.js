@@ -20,11 +20,17 @@ var tileUtils = {
 // Adds requestAnimationFrame to the utils
 var lastTime = 0;
 var vendors = ['webkit', 'moz'];
-for(var x = 0; x < vendors.length && !tileUtils.requestAnimationFrame; ++x) {
-  tileUtils.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-  tileUtils.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] ||
-    window[vendors[x]+'CancelRequestAnimationFrame']
-  ;
+if( window.requestAnimationFrame ){
+  tileUtils.requestAnimationFrame = window.requestAnimationFrame;
+  tileUtils.cancelAnimationFrame = window.cancelAnimationFrame;
+}
+else {
+  for(var x = 0; x < vendors.length && !tileUtils.requestAnimationFrame; ++x) {
+    tileUtils.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+    tileUtils.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] ||
+      window[vendors[x]+'CancelRequestAnimationFrame']
+    ;
+  }
 }
 
 if (!tileUtils.requestAnimationFrame){

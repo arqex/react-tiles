@@ -80,7 +80,7 @@ $time: .3s;
   height: 100%;
 }
 
-.tileresizing {
+.tileresizing, .tilemoving {
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer */
   -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
@@ -91,6 +91,8 @@ $time: .3s;
     transition: none;
   }
 }
+
+
 
 .tilecolumn.tileentered>.tileentering {
   height: 0 !important;
@@ -172,4 +174,86 @@ $time: .3s;
 
 .tilefree .tilecontrols{
   display: none;
+}
+
+.floatingWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: 1;
+}
+
+.floatingsingletile {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 5px rgba(0,0,0,.1);
+}
+
+.tileResizers>div {
+	position: absolute;
+	z-index: 5;
+}
+
+.resizer-n {
+	height: 5px;
+	width: 100%;
+	left: 0;
+	top: -2px;
+	cursor: n-resize;
+}
+.resizer-ne {
+	width: 5px;
+	height: 5px;
+	z-index: 6;
+	top: -2px;
+	right: -2px;
+	cursor: ne-resize;
+}
+.resizer-e {
+	width: 5px;
+	height: 100%;
+	top: -2px;
+	right: -2px;
+	cursor: e-resize;
+}
+.resizer-se {
+	width: 5px;
+	height: 5px;
+	z-index: 6;
+	bottom: -2px;
+	right: -2px;
+	cursor: se-resize;
+}
+.resizer-s {
+	height: 5px;
+	width: 100%;
+	left: -2px;
+	bottom: -2px;
+	cursor: n-resize;
+}
+.resizer-sw {
+	width: 5px;
+	height: 5px;
+	z-index: 6;
+	bottom: -2px;
+	left: -2px;
+	cursor: ne-resize;
+}
+.resizer-w {
+	width: 5px;
+	height: 100%;
+	top: -2px;
+	left: -2px;
+	cursor: e-resize;
+}
+.resizer-nw {
+	width: 5px;
+	height: 5px;
+	z-index: 6;
+	top: -2px;
+	left: -2px;
+	cursor: se-resize;
 }

@@ -3,13 +3,20 @@ var React = require('react'),
   Router = require('react-router'),
   UrlParser = require('./UrlParser'),
   TileWrapper = require('./TileWrapper'),
+  FloatingWrapper = require('./FloatingWrapper'),
   QueryBuilder = require('./QueryBuilder'),
   TileLink = require('./TileLink'),
+  Tile = require('./Tile'),
   utils = require('./TileUtils'),
   qs = require('qs')
 ;
 
 require('./tiles.scss');
+
+var minSizes = {
+  column: 200, // For column wrappers this is the minimun height of a row
+  row: 320 // For row wrappers this is the minumum width of a column
+};
 
 var TileManager = React.createClass({
   getInitialState: function(){
@@ -47,7 +54,9 @@ var TileManager = React.createClass({
           dimensions={ this.state.dimensions }
           onResizeStart={ this.setState.bind(this, {resizing: true}) }
           onResizeEnd={ this.setState.bind(this, {resizing: false}) }
+          minSizes={ minSizes }
         />
+      <FloatingWrapper {...this.props} minSizes={ minSizes } tiles={ this.state.layout.floating } />
       </div>
     );
   },

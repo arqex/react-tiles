@@ -47,13 +47,14 @@ var Tile = React.createClass({
 
     return (
       <div className={ className } style={ this.props.dimensions }>
-        <div className="tilecontrols">
+        <div className="tilecontrols" onMouseDown={ this.props.onDragStart }>
           <a onClick={ () => this.closeTile() }>x</a>
         </div>
         { overlay }
         <TileContent resizing={ this.props.resizing }>
           { content }
         </TileContent>
+        { this.renderResizers() }
       </div>
     )
   },
@@ -96,6 +97,24 @@ var Tile = React.createClass({
     var builder = require('./TileManager').getQueryBuilder();
     var url = builder.remove( this.props.layout.id );
     location.href = url;
+  },
+  renderResizers: function(){
+    if( this.props.layout.type !== 'floating' ){
+      return;
+    }
+
+    return (
+      <div className="tileResizers">
+        <div className="resizer-n" onMouseDown={ this.props.onResizeStart('n') }></div>
+        <div className="resizer-e" onMouseDown={ this.props.onResizeStart('e') }></div>
+        <div className="resizer-s" onMouseDown={ this.props.onResizeStart('s') }></div>
+        <div className="resizer-w" onMouseDown={ this.props.onResizeStart('w') }></div>
+        <div className="resizer-nw" onMouseDown={ this.props.onResizeStart('nw') }></div>
+        <div className="resizer-ne" onMouseDown={ this.props.onResizeStart('ne') }></div>
+        <div className="resizer-se" onMouseDown={ this.props.onResizeStart('se') }></div>
+        <div className="resizer-sw" onMouseDown={ this.props.onResizeStart('sw') }></div>
+      </div>
+    );
   }
 });
 

@@ -220,10 +220,10 @@ var UrlParser = {
       parts
     ;
 
-    for( var i = 0; i<tiles.length-1; i-- ){
-      parts = tile[i].split(':');
+    for( var i = 0; i<tiles.length; i++ ){
+      parts = tiles[i].split(':');
       if( parts.length == 2 ){
-        floating[ parts[0] ] = parts[1];
+        floating[ parts[0] ] = decodeURIComponent(parts[1]);
       }
     }
 
