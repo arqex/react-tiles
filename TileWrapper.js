@@ -16,7 +16,8 @@ var TileWrapper = React.createClass({
       sizes: this.getInitialSizes( this.props.layout.children.length ),
       updatingSizes: false,
       resizing: false,
-      firstRendering: true
+      firstRendering: true,
+      rect: false
     };
   },
   getInitialSizes( count ){
@@ -62,30 +63,33 @@ var TileWrapper = React.createClass({
       </Animate>
     )
   },
+
   renderChildren: function(){
     var me = this,
       props = this.props,
       layout = props.layout,
       sizes = this.state.sizes,
-      i = 0
+      i = 0,
+      placeholder = this.renderPlaceholder()
     ;
 
-
-    return layout.children.map( function( child ){
+    var children = layout.children.map( function( child ){
       var Component = child.type === 'tile' ? Tile : TileWrapper,
+        phrowfactor = placeholder && props.layout.type === 'row' ? .8 : 1,
+        phcolfactor = placeholder && props.layout.type === 'column' ? .8 : 1,
         dimensions
       ;
 
       if( layout.type === 'column' ){
         dimensions = {
-          height: sizes[i++] + '%',
+          height: (sizes[i++]*phcolfactor) + '%',
           width: props.dimensions.width
         }
       }
       else {
         dimensions = {
-          height: props.dimensions.height,
-          width: sizes[i++] + '%'
+          height: (props.dimensions.height*phcolfactor),
+          width: (sizes[i++]*phrowfactor) + '%'
         }
       }
 
@@ -99,6 +103,11 @@ var TileWrapper = React.createClass({
         onResizeStart={ me.props.onResizeStart.bind( me ) }
         onResizeEnd={ me.props.onResizeEnd.bind( me ) } />;
     });
+
+    if( placeholder ){
+      children.push( placeholder );
+    }
+    return children;
   },
   renderSeparators: function(){
     var separators = [],
@@ -114,6 +123,24 @@ var TileWrapper = React.createClass({
       separators.push( <div key={ 's' + i } className={className} style={style} onMouseDown={ this.updateSizesStart.bind(this, i) } />)
     }
     return separators;
+  },
+
+  renderPlaceholder: function(){
+    var moving = this.props.movingTile;
+    if( !moving || !this.state.rect ){
+      return;
+    }
+    var rect = this.state.rect,
+      layout = this.props.layout,
+      factor = rect.width / this.props.layout.children.length
+    ;
+
+    if( (layout.type === 'free' || layout.type === 'row') && moving.x >= rect.right - 200 ){
+      return <div className="tileph rowph" key="rph"></div>;
+    }
+    else if( (layout.type === 'free' || layout.type === 'column') && moving.y >= rect.bottom - 200 ){
+      return <div className="tileph columnph" key="cph"></div>;
+    }
   },
 
   isNumeric: function( n ){
@@ -253,6 +280,14 @@ var TileWrapper = React.createClass({
     setTimeout( function(){
       me.setState({firstRendering: false});
     });
+  },
+  componentDidUpdate: function( prevProps ){
+    if( prevProps.movingTile && !this.props.movingTile ){
+      this.setState({rect:false});
+    }
+    else if( !prevProps.movingTile && this.props.movingTile ){
+      this.setState({rect: ReactDom.findDOMNode(this).getBoundingClientRect()});
+    }
   }
 });
 

@@ -35,7 +35,8 @@ var TileManager = React.createClass({
         height: window.innerHeight,
         width: window.innerWidth
       },
-      resizing: false
+      resizing: false,
+      moving: false
     };
   },
 
@@ -46,6 +47,9 @@ var TileManager = React.createClass({
     if( this.state.resizing ){
       className += ' tileresizing';
     }
+    if( this.state.moving ){
+      className += ' tilemoving';
+    }
 
     return (
       <div className={ className }>
@@ -54,9 +58,14 @@ var TileManager = React.createClass({
           dimensions={ this.state.dimensions }
           onResizeStart={ this.setState.bind(this, {resizing: true}) }
           onResizeEnd={ this.setState.bind(this, {resizing: false}) }
+          movingTile={ this.state.moving }
           minSizes={ minSizes }
         />
-      <FloatingWrapper {...this.props} minSizes={ minSizes } tiles={ this.state.layout.floating } />
+      <FloatingWrapper {...this.props}
+        minSizes={ minSizes }
+        tiles={ this.state.layout.floating }
+        onMove={ this.onMove }
+        onStopMove={ this.onStopMove } />
       </div>
     );
   },
@@ -115,6 +124,12 @@ var TileManager = React.createClass({
     if( routeParts[1] && routeParts[1].slice(0,2) === '/#' ){
       QueryBuilder.setPathFormat('/#');
     }
+  },
+  onMove: function( tileData ){
+    this.setState({moving: tileData});
+  },
+  onStopMove: function( tileData ){
+    this.setState({moving: false});
   }
 });
 

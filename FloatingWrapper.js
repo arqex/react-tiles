@@ -23,9 +23,7 @@ var FloatingWrapper = React.createClass({
 
   render: function(){
     var className = 'floatingWrapper';
-    if( this.state.moving ){
-      className += ' tilemoving';
-    }
+    
     return (
       <div className={ className }>
         { this.renderTiles() }
@@ -96,6 +94,7 @@ var FloatingWrapper = React.createClass({
 						;
 						if( moveStarted || Math.abs( left ) > 20 || Math.abs( top ) > 20 ){
 							moveStarted = true;
+              me.props.onMove({id: tid, x: e.clientX, y: e.clientY});
 							var dimensions = assign({}, me.state.dimensions );
               dimensions[tid] = assign({}, dimensions[tid], {
                 left: pos.left + left,
@@ -125,6 +124,8 @@ var FloatingWrapper = React.createClass({
           });
           update.dimensions = dimensions;
         }
+
+        me.props.onStopMove({id: tid, x: e.clientX, y: e.clientY});
 
 				finished = true;
 

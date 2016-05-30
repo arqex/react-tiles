@@ -80,7 +80,7 @@ $time: .3s;
   height: 100%;
 }
 
-.tileresizing, .tilemoving {
+.tileresizing {
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer */
   -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
@@ -90,6 +90,14 @@ $time: .3s;
   .tilerow, .tilecolumn, .singletile, .separator {
     transition: none;
   }
+}
+
+.tilemoving {
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer */
+  -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
+  -webkit-user-select: none; /* Chrome, Safari, and Opera */
+  -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
 }
 
 
@@ -256,4 +264,47 @@ $time: .3s;
 	top: -2px;
 	left: -2px;
 	cursor: se-resize;
+}
+
+.tileph {
+  background: #ccc;
+  float: left;
+  position: absolute;
+  transition: width $time, height $time, opacity $time;
+}
+.rowph {
+  height: 100%;
+  width: 20%;
+  top: 0;
+  right: 0;
+  &.tilewrapper-enter {
+    width: 0%;
+    opacity:0;
+    &.tilewrapper-enter-active {
+      width: 20%;
+      opacity: 1;
+    }
+  }
+  &.tilewrapper-leave {
+    width: 0%;
+    opacity:0;
+  }
+}
+.columnph {
+  width: 100%;
+  height: 20%;
+  bottom: 0;
+  left: 0;
+  &.tilewrapper-enter {
+    height: 0%;
+    opacity:0;
+    &.tilewrapper-enter-active {
+      height: 20%;
+      opacity: 1;
+    }
+  }
+  &.tilewrapper-leave {
+    height: 0%;
+    opacity:0;
+  }
 }
