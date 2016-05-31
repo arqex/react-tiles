@@ -52,6 +52,26 @@ var FloatingWrapper = React.createClass({
 
     return floating;
   },
+  componentWillReceiveProps: function( nextProps ){
+    if( nextProps.tiles !== this.props.tiles ){
+      var i = Object.keys(this.state.dimensions).length,
+        dimensions = {},
+        update = {}
+      ;
+
+      Object.keys( nextProps.tiles ).forEach( tileId => {
+        dimensions[ tileId ] = this.state.dimensions[ tileId ];
+        if( !dimensions[ tileId ] ){
+          // new tile!
+          dimensions[ tileId ] = this.getInitialTileDimensions( i++ );
+          update.currentTile = tileId;
+        }
+      });
+
+      update.dimensions = dimensions;
+      this.setState( update );
+    }
+  },
   getInitialTileDimensions: function( i ){
     return {
       width: 400,
