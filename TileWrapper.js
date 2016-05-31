@@ -135,10 +135,10 @@ var TileWrapper = React.createClass({
       factor = rect.width / this.props.layout.children.length
     ;
 
-    if( (layout.type === 'free' || layout.type === 'row') && moving.x >= rect.right - 200 ){
+    if( (layout.type === 'free' || layout.type === 'row') && moving.x >= rect.right - 200 && moving.y >= rect.top && moving.y <= rect.bottom ){
       return <div className="tileph rowph" key="rph"></div>;
     }
-    else if( (layout.type === 'free' || layout.type === 'column') && moving.y >= rect.bottom - 200 ){
+    else if( (layout.type === 'free' || layout.type === 'column') && moving.y >= rect.bottom - 200 && moving.x >= rect.left && moving.x <= rect.right ){
       return <div className="tileph columnph" key="cph"></div>;
     }
   },
