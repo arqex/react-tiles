@@ -43,31 +43,37 @@ assign( TileQueryBuilder.prototype, {
       tileIndex, wrapper
     ;
 
-    while( i-- > 0 ){
-      tileIndex = findIndex( nextLayout.children[i], id );
-      if( tileIndex !== -1 ){
-        if( nextLayout.children[i].children.length === 1 ){
+    if( nextLayout.floating[ id ] ){
+      nextLayout.floating = assign( {}, nextLayout.floating );
+      delete nextLayout.floating[ id ];
+    }
+    else {
+      while( i-- > 0 ){
+        tileIndex = findIndex( nextLayout.children[i], id );
+        if( tileIndex !== -1 ){
+          if( nextLayout.children[i].children.length === 1 ){
 
-          // If it was the only child, remove the wrapper
-          nextLayout.children.splice( i, 1 );
-        }
-        else {
-          wrapper = cloneLayout( nextLayout.children[i] );
-          wrapper.children.splice( tileIndex, 1 );
-          nextLayout.children[i] = wrapper;
-        }
-        if( nextLayout.children.length === 1 ){
-          nextLayout.children[0] = cloneLayout( nextLayout.children[0] );
-          if( nextLayout.children[0].children.length === 1 ){
-            nextLayout.type = 'free';
-            nextLayout.children[0].type = 'freeChild';
+            // If it was the only child, remove the wrapper
+            nextLayout.children.splice( i, 1 );
           }
+          else {
+            wrapper = cloneLayout( nextLayout.children[i] );
+            wrapper.children.splice( tileIndex, 1 );
+            nextLayout.children[i] = wrapper;
+          }
+          if( nextLayout.children.length === 1 ){
+            nextLayout.children[0] = cloneLayout( nextLayout.children[0] );
+            if( nextLayout.children[0].children.length === 1 ){
+              nextLayout.type = 'free';
+              nextLayout.children[0].type = 'freeChild';
+            }
+          }
+          return this.layoutToPath( nextLayout, update, returnLayout );
         }
-        return this.layoutToPath( nextLayout, update, returnLayout );
       }
     }
 
-    return this.layoutToPath( this.layout, update, returnLayout );
+    return this.layoutToPath( nextLayout, update, returnLayout );
   },
 
   resetWrapper: function( id, tile, update, returnLayout ){
@@ -115,17 +121,17 @@ assign( TileQueryBuilder.prototype, {
 
     var q, floating;
     if( layout.type === 'free' ){
-      floating = UrlParser.stringifyFloating( layout );
       q = layout.children[0].children[0].route +
         '?tw=' + layout.id + ':' + layout.children[0].id + ':' + layout.children[0].children[0].id
       ;
-
-      if( floating ){
-        q += '&ft=' + floating;
-      }
     }
     else {
       q = layout.path + '?t=' + UrlParser.stringify( layout );
+    }
+
+    floating = UrlParser.stringifyFloating( layout );
+    if( floating ){
+      q += '&ft=' + floating;
     }
 
     if( update ){

@@ -198,6 +198,12 @@ $time: .3s;
   background: #fff;
   border: 1px solid #eee;
   box-shadow: 0 2px 5px rgba(0,0,0,.1);
+  transition: opacity $time, transform $time;
+
+  &.tilewrapper-leave {
+    opacity: 0;
+    transform: scale(.5) translate( 0, -100px );
+  }
 }
 
 .tileResizers>div {

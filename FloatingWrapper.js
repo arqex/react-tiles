@@ -1,6 +1,7 @@
 var React = require('react'),
   Tile = require('./Tile'),
   assign = require('object-assign'),
+  Animate = require('rc-animate'),
   utils = require('./TileUtils')
 ;
 
@@ -23,11 +24,11 @@ var FloatingWrapper = React.createClass({
 
   render: function(){
     var className = 'floatingWrapper';
-    
+
     return (
-      <div className={ className }>
+      <Animate ref="animate" component="div" className={ className } transitionName="tilewrapper">
         { this.renderTiles() }
-      </div>
+      </Animate>
     );
   },
   renderTiles: function() {
