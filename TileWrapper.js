@@ -70,7 +70,7 @@ var TileWrapper = React.createClass({
       layout = props.layout,
       sizes = this.state.sizes,
       i = 0,
-      placeholder = this.renderPlaceholder()
+      placeholder = this.renderPlaceholder( this.props.movingTile )
     ;
 
     var children = layout.children.map( function( child ){
@@ -96,9 +96,11 @@ var TileWrapper = React.createClass({
       return <Component {...props}
         layout={child}
         key={ child.id }
+        ref={ child.id }
         dimensions={ dimensions }
         wrapper={ layout }
         resizing={ me.state.resizing }
+        movingTile={ me.props.movingTile }
         onDragStart={ function(){} }
         onResizeStart={ me.props.onResizeStart.bind( me ) }
         onResizeEnd={ me.props.onResizeEnd.bind( me ) } />;
@@ -125,8 +127,7 @@ var TileWrapper = React.createClass({
     return separators;
   },
 
-  renderPlaceholder: function(){
-    var moving = this.props.movingTile;
+  renderPlaceholder: function( moving ){
     if( !moving || !this.state.rect ){
       return;
     }
@@ -287,6 +288,24 @@ var TileWrapper = React.createClass({
     }
     else if( !prevProps.movingTile && this.props.movingTile ){
       this.setState({rect: ReactDom.findDOMNode(this).getBoundingClientRect()});
+    }
+  },
+  receiveTile: function( position ){
+    if( this.renderPlaceholder( position ) ){
+      return this.props.layout.id;
+    };
+
+    var children = this.props.layout.children,
+      i = children.length,
+      id
+    ;
+
+    while( i-- > 0 ){
+      if( children.type !== 'tile' ){
+        if( this.refs[ children[i].id ].renderPlaceholder( position ) ){
+          return children[i].id;
+        }
+      }
     }
   }
 });

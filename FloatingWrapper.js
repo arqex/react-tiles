@@ -139,6 +139,7 @@ var FloatingWrapper = React.createClass({
           left = now.left - start.left,
           top = now.top - start.top
         ;
+
         if( moveStarted ){
           var dimensions = assign({}, me.state.dimensions );
           dimensions[tid] = assign({}, dimensions[tid], {
@@ -146,10 +147,9 @@ var FloatingWrapper = React.createClass({
             top: pos.top + top
           });
           update.dimensions = dimensions;
+          me.props.onStopMove({id: tid, x: e.clientX, y: e.clientY});
         }
-
-        me.props.onStopMove({id: tid, x: e.clientX, y: e.clientY});
-
+        
 				finished = true;
 
 				me.setState( update );

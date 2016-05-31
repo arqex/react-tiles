@@ -54,6 +54,7 @@ var TileManager = React.createClass({
     return (
       <div className={ className }>
         <TileWrapper {...this.props}
+          ref="wrapper"
           layout={this.state.layout}
           dimensions={ this.state.dimensions }
           onResizeStart={ this.setState.bind(this, {resizing: true}) }
@@ -129,6 +130,23 @@ var TileManager = React.createClass({
     this.setState({moving: tileData});
   },
   onStopMove: function( tileData ){
+    var wrapperId = this.refs.wrapper.receiveTile( tileData );
+    if( wrapperId ){
+      var builder = this.getQueryBuilder(),
+        route = this.state.layout.floating[ tileData.id ]
+      ;
+
+      builder.remove( tileData.id, true );
+      var route = builder.setTile({
+        id: tileData.id,
+        route: route,
+        type: 'tile',
+        target: wrapperId
+      });
+
+      location.href = route;
+    }
+    console.log( wrapperId );
     this.setState({moving: false});
   }
 });
