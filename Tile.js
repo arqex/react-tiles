@@ -36,9 +36,11 @@ var Tile = React.createClass({
     if( this.state.firstRendering ){
       className += ' tileentering';
     }
-
     if( C === IframeTile ){
       className += ' tileiframe';
+    }
+    if( this.props.isCurrentTile ){
+      className += ' tilecurrent';
     }
 
     if( this.state.isIframe ){
@@ -46,7 +48,7 @@ var Tile = React.createClass({
     }
 
     return (
-      <div className={ className } style={ this.props.dimensions }>
+      <div className={ className } style={ this.props.dimensions } onClick={ () => this.onClick() }>
         <div className="tilecontrols" onMouseDown={ this.props.onDragStart }>
           <a onClick={ () => this.closeTile() }>x</a>
         </div>
@@ -115,6 +117,9 @@ var Tile = React.createClass({
         <div className="resizer-sw" onMouseDown={ this.props.onResizeStart('sw') }></div>
       </div>
     );
+  },
+  onClick: function(){
+    return this.props.onClick && this.props.onClick( this.props.layout.id );
   }
 });
 

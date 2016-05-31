@@ -206,6 +206,10 @@ $time: .3s;
   }
 }
 
+.tilecurrent {
+  z-index: 2;
+}
+
 .tileResizers>div {
 	position: absolute;
 	z-index: 5;

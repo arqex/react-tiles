@@ -41,11 +41,13 @@ var FloatingWrapper = React.createClass({
       floating.push(
         <Tile {...me.props}
           key={ tileId }
-          layout={ {id: tileId, route: tiles[ tileId ], type:'floating'} }
+          layout={ {id: tileId, route: tiles[ tileId ], type: 'floating'} }
           dimensions={ this.state.dimensions[ tileId ] }
           resizing={ this.state.resizing }
           onDragStart={ me.onDragStart( tileId ) }
           onResizeStart={ me.onResizeStart( tileId ) }
+          onClick={ tid => this.setState( {currentTile: tid } ) }
+          isCurrentTile={ tileId === this.state.currentTile }
           wrapper={ {id: 'floating', type: 'floating'} } />
       );
     });
