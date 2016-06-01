@@ -112,7 +112,7 @@ var TileWrapper = React.createClass({
         wrapper={ layout }
         resizing={ me.state.resizing }
         movingTile={ me.props.movingTile }
-        onDragStart={ function(){} }
+        onDragStart={ me.props.onDragStart.bind( me ) }
         onResizeStart={ me.props.onResizeStart.bind( me ) }
         onResizeEnd={ me.props.onResizeEnd.bind( me ) } />;
     });

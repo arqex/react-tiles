@@ -1,5 +1,6 @@
 var React = require('react'),
   Router = require('react-router'),
+  ReactDom = require('react-dom'),
   IframeTile = require('./IframeTile')
 ;
 
@@ -49,7 +50,7 @@ var Tile = React.createClass({
 
     return (
       <div className={ className } style={ this.props.dimensions } onClick={ () => this.onClick() }>
-        <div className="tilecontrols" onMouseDown={ this.props.onDragStart }>
+        <div className="tilecontrols" onMouseDown={ e => this.onDragStart(e) }>
           <a onClick={ () => this.closeTile() }>x</a>
         </div>
         { overlay }
@@ -120,6 +121,11 @@ var Tile = React.createClass({
   },
   onClick: function(){
     return this.props.onClick && this.props.onClick( this.props.layout.id );
+  },
+  onDragStart: function( e ){
+    if(this.props.onDragStart){
+      this.props.onDragStart( e, this.props.layout.id, ReactDom.findDOMNode(this).getBoundingClientRect() );
+    }
   }
 });
 

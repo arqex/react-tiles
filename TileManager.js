@@ -59,6 +59,7 @@ var TileManager = React.createClass({
           dimensions={ this.state.dimensions }
           onResizeStart={ this.setState.bind(this, {resizing: true}) }
           onResizeEnd={ this.setState.bind(this, {resizing: false}) }
+          onDragStart={ this.onDragStart.bind( this ) }
           movingTile={ this.state.moving }
           minSizes={ minSizes }
         />
@@ -151,6 +152,9 @@ var TileManager = React.createClass({
     }
 
     this.setState({moving: false});
+  },
+  onDragStart: function( e, boundaries ){
+    console.log( boundaries );
   }
 });
 
