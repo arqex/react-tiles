@@ -2,7 +2,7 @@ var React = require('react'),
   Tile = require('./Tile'),
   assign = require('object-assign'),
   Animate = require('rc-animate'),
-  utils = require('./TileUtils')
+  utils = require('../utils/TileUtils')
 ;
 
 var FloatingWrapper = React.createClass({
@@ -149,7 +149,7 @@ var FloatingWrapper = React.createClass({
           update.dimensions = dimensions;
           me.props.onStopMove({id: tid, x: e.clientX, y: e.clientY});
         }
-        
+
 				finished = true;
 
 				me.setState( update );

@@ -1,13 +1,13 @@
 var React = require('react'),
   ReactDom = require('react-dom'),
   Router = require('react-router'),
-  UrlParser = require('./UrlParser'),
-  TileWrapper = require('./TileWrapper'),
-  FloatingWrapper = require('./FloatingWrapper'),
-  QueryBuilder = require('./QueryBuilder'),
-  TileLink = require('./TileLink'),
-  Tile = require('./Tile'),
-  utils = require('./TileUtils'),
+  TileWrapper = require('./components/TileWrapper'),
+  FloatingWrapper = require('./components/FloatingWrapper'),
+  TileLink = require('./components/TileLink'),
+  Tile = require('./components/Tile'),
+  QueryBuilder = require('./utils/QueryBuilder'),
+  utils = require('./utils/TileUtils'),
+  UrlParser = require('./utils/UrlParser'),
   qs = require('qs')
 ;
 
@@ -18,11 +18,11 @@ var minSizes = {
   row: 320 // For row wrappers this is the minumum width of a column
 };
 
-var TileManager = React.createClass({
+var Tiles = React.createClass({
   getInitialState: function(){
-    TileManager.getQueryBuilder = this.getQueryBuilder;
+    Tiles.getQueryBuilder = this.getQueryBuilder;
 
-    TileManager.getWrapperInfo = id => {
+    Tiles.getWrapperInfo = id => {
       return this.getQueryBuilder().getWrapperInfo( id );
     }
 
@@ -158,7 +158,7 @@ var TileManager = React.createClass({
   }
 });
 
-TileManager.Link = TileLink;
-TileLink.setManager( TileManager );
+Tiles.Link = TileLink;
+TileLink.setManager( Tiles );
 
-module.exports = TileManager;
+module.exports = Tiles;

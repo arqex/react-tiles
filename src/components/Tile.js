@@ -97,7 +97,7 @@ var Tile = React.createClass({
     })
   },
   closeTile: function(){
-    var builder = require('./TileManager').getQueryBuilder();
+    var builder = require('../react-tiles').getQueryBuilder();
     var url = builder.remove( this.props.layout.id );
     location.href = url;
   },

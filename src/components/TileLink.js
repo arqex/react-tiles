@@ -1,5 +1,5 @@
 var React = require('react');
-var utils = require('./TileUtils');
+var utils = require('../utils/TileUtils');
 
 var TileManager;
 /**

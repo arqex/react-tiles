@@ -2,7 +2,7 @@ var React = require('react'),
   ReactDom = require('react-dom'),
   Tile = require('./Tile'),
   Animate = require('rc-animate'),
-  utils = require('./TileUtils')
+  utils = require('../utils/TileUtils')
 ;
 
 var sizeTypes = {
