@@ -130,23 +130,26 @@ var TileManager = React.createClass({
     this.setState({moving: tileData});
   },
   onStopMove: function( tileData ){
-    var wrapperId = this.refs.wrapper.receiveTile( tileData );
-    if( wrapperId ){
+    var wrapper = this.refs.wrapper.receiveTile( tileData );
+    if( wrapper ){
       var builder = this.getQueryBuilder(),
-        route = this.state.layout.floating[ tileData.id ]
+        tileRoute = this.state.layout.floating[ tileData.id ],
+        wrapperId = wrapper.isNew ? utils.tid( wrapper.type[0] ) : wrapper.id
       ;
 
       builder.remove( tileData.id, true );
-      var route = builder.setTile({
-        id: tileData.id,
-        route: route,
-        type: 'tile',
-        target: wrapperId
-      });
+      var type = wrapper.isNew ? wrapper.type : 'tile',
+        route = builder.setTile({
+          id: tileData.id,
+          route: tileRoute,
+          type: type,
+          target: wrapperId
+        })
+      ;
 
       location.href = route;
     }
-    console.log( wrapperId );
+
     this.setState({moving: false});
   }
 });

@@ -40,6 +40,7 @@ var TileWrapper = React.createClass({
         this.state.firstRendering ? 'tileentering' : 'tileentered',
       ].join(' '),
       dimensions = this.props.dimensions,
+      placeholder = this.getPlaceholder( this.props.movingTile ),
       style
     ;
 
@@ -56,40 +57,50 @@ var TileWrapper = React.createClass({
       }
     }
 
+    if( placeholder ){
+      wrapperClass += ' phwrapper';
+    }
+
     return (
       <Animate ref="animate" component="div" className={ wrapperClass } style={ style } transitionName="tilewrapper">
-        { this.renderChildren() }
+        { this.renderChildren( placeholder ) }
         { this.renderSeparators() }
       </Animate>
     )
   },
 
-  renderChildren: function(){
+  renderChildren: function( placeholder ){
     var me = this,
       props = this.props,
       layout = props.layout,
       sizes = this.state.sizes,
       i = 0,
-      placeholder = this.renderPlaceholder( this.props.movingTile )
+      placeholder = this.getPlaceholder( this.props.movingTile ),
+      factor = {
+        column: 1,
+        row: 1
+      }
     ;
+
+    if( placeholder ){
+      factor[ placeholder ] = .8;
+    }
 
     var children = layout.children.map( function( child ){
       var Component = child.type === 'tile' ? Tile : TileWrapper,
-        phrowfactor = placeholder && props.layout.type === 'row' ? .8 : 1,
-        phcolfactor = placeholder && props.layout.type === 'column' ? .8 : 1,
         dimensions
       ;
 
       if( layout.type === 'column' ){
         dimensions = {
-          height: (sizes[i++]*phcolfactor) + '%',
+          height: (sizes[i++]*factor.row) + '%',
           width: props.dimensions.width
         }
       }
       else {
         dimensions = {
-          height: (props.dimensions.height*phcolfactor),
-          width: (sizes[i++]*phrowfactor) + '%'
+          height: (props.dimensions.height*factor.row),
+          width: (sizes[i++]*factor.column) + '%'
         }
       }
 
@@ -107,8 +118,9 @@ var TileWrapper = React.createClass({
     });
 
     if( placeholder ){
-      children.push( placeholder );
+      children.push( this.renderPlaceholder( placeholder ) );
     }
+
     return children;
   },
   renderSeparators: function(){
@@ -127,20 +139,29 @@ var TileWrapper = React.createClass({
     return separators;
   },
 
-  renderPlaceholder: function( moving ){
+  renderPlaceholder: function( type ){
+    if( type === 'column'){
+      return <div className="tileph rowph" key="rph"></div>;
+    }
+    else {
+      return <div className="tileph columnph" key="cph"></div>;
+    }
+  },
+
+  getPlaceholder: function( moving ){
     if( !moving || !this.state.rect ){
       return;
     }
     var rect = this.state.rect,
       layout = this.props.layout,
-      factor = rect.width / this.props.layout.children.length
+      factor = rect.width / (this.props.layout.children.length + 1 )
     ;
 
-    if( (layout.type === 'free' || layout.type === 'row') && moving.x >= rect.right - 200 && moving.y >= rect.top && moving.y <= rect.bottom ){
-      return <div className="tileph rowph" key="rph"></div>;
+    if( (layout.type === 'free' || layout.type === 'row') && moving.x >= rect.right - 200 && moving.y >= rect.top && moving.y <= rect.bottom && factor > this.props.minSizes.row ){
+      return 'column';
     }
-    else if( (layout.type === 'free' || layout.type === 'column') && moving.y >= rect.bottom - 200 && moving.x >= rect.left && moving.x <= rect.right ){
-      return <div className="tileph columnph" key="cph"></div>;
+    else if( (layout.type === 'free' || layout.type === 'column') && moving.y >= rect.bottom - 200 && moving.x >= rect.left && moving.x <= rect.right && factor > this.props.minSizes.column ){
+      return 'row';
     }
   },
 
@@ -221,7 +242,7 @@ var TileWrapper = React.createClass({
         wrapperOffset: wrapper[offset],
         wrapperSize: wrapper[size],
         separatorIndex: separatorIndex,
-        minPercentage: this.minSizes[ this.props.layout.type ] / wrapper[size] * 100,
+        minPercentage: this.props.minSizes[ this.props.layout.type ] / wrapper[size] * 100,
         sizes: this.state.sizes,
         startingPoint: e[dimension],
         initialPercent: 0
@@ -291,8 +312,14 @@ var TileWrapper = React.createClass({
     }
   },
   receiveTile: function( position ){
-    if( this.renderPlaceholder( position ) ){
-      return this.props.layout.id;
+    var type;
+
+    if( type = this.getPlaceholder( position ) ){
+      return {
+        id: this.props.layout.id,
+        type: type,
+        isNew: true
+      };
     };
 
     var children = this.props.layout.children,
@@ -302,8 +329,11 @@ var TileWrapper = React.createClass({
 
     while( i-- > 0 ){
       if( children.type !== 'tile' ){
-        if( this.refs[ children[i].id ].renderPlaceholder( position ) ){
-          return children[i].id;
+        if( type = this.refs[ children[i].id ].getPlaceholder( position ) ){
+          return {
+            id: children[i].id,
+            type: children[i].type
+          };
         }
       }
     }

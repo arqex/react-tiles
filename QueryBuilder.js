@@ -172,6 +172,7 @@ assign( TileQueryBuilder.prototype, {
           return this.layoutToPath( nextLayout, ops.update, returnLayout );
         }
         nextLayout.type = ops.type === 'row' ? 'column' : 'row';
+        nextLayout.children[0].type = ops.type;
         wrapper.type = ops.type;
       }
       else {
