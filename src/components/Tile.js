@@ -1,7 +1,8 @@
 var React = require('react'),
   Router = require('react-router'),
   ReactDom = require('react-dom'),
-  IframeTile = require('./IframeTile')
+  IframeTile = require('./IframeTile'),
+  assign = require('object-assign')
 ;
 
 var Tile = React.createClass({
@@ -24,8 +25,7 @@ var Tile = React.createClass({
     };
   },
   render: function(){
-    var dimensions = this.props.dimensions,
-      className = 'singletile ' + this.props.layout.id + ' ' + this.props.wrapper.type + 'singletile',
+    var className = 'singletile ' + this.props.layout.id + ' ' + this.props.wrapper.type + 'singletile',
       C = this.state.C,
       content, overlay
     ;
@@ -49,7 +49,7 @@ var Tile = React.createClass({
     }
 
     return (
-      <div className={ className } style={ this.props.dimensions } onClick={ () => this.onClick() }>
+      <div className={ className } style={ assign({},this.props.dimensions) } onClick={ () => this.onClick() }>
         <div className="tilecontrols" onMouseDown={ e => this.onDragStart(e) }>
           <a onClick={ () => this.closeTile() }>x</a>
         </div>

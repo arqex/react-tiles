@@ -97,10 +97,16 @@ var TileWrapper = React.createClass({
           width: props.dimensions.width
         }
       }
+      else if( layout.type === 'row' ){
+        dimensions = {
+          height: props.dimensions.height,
+          width: (sizes[i++]*factor.column) + '%'
+        }
+      }
       else {
         dimensions = {
-          height: (props.dimensions.height*factor.row),
-          width: (sizes[i++]*factor.column) + '%'
+          height: (100 * factor.row) + '%',
+          width: (100 * factor.column) + '%'
         }
       }
 
@@ -112,9 +118,9 @@ var TileWrapper = React.createClass({
         wrapper={ layout }
         resizing={ me.state.resizing }
         movingTile={ me.props.movingTile }
-        onDragStart={ me.props.onDragStart.bind( me ) }
-        onResizeStart={ me.props.onResizeStart.bind( me ) }
-        onResizeEnd={ me.props.onResizeEnd.bind( me ) } />;
+        onDragStart={ me.props.onDragStart }
+        onResizeStart={ me.props.onResizeStart }
+        onResizeEnd={ me.props.onResizeEnd } />;
     });
 
     if( placeholder ){
@@ -152,15 +158,18 @@ var TileWrapper = React.createClass({
     if( !moving || !this.state.rect ){
       return;
     }
-    var rect = this.state.rect,
-      layout = this.props.layout,
-      factor = rect.width / (this.props.layout.children.length + 1 )
+    var layout = this.props.layout,
+      rect = this.state.rect,
+      colFactor = rect.height / (layout.children.length + 1 ),
+      rowFactor = rect.width / (layout.children.length + 1 )
     ;
 
-    if( (layout.type === 'free' || layout.type === 'row') && moving.x >= rect.right - 200 && moving.y >= rect.top && moving.y <= rect.bottom && factor > this.props.minSizes.row ){
+
+
+    if( (layout.type === 'free' || layout.type === 'row') && moving.x >= rect.right - 200 && moving.y >= rect.top && moving.y <= rect.bottom && rowFactor > this.props.minSizes.row ){
       return 'column';
     }
-    else if( (layout.type === 'free' || layout.type === 'column') && moving.y >= rect.bottom - 200 && moving.x >= rect.left && moving.x <= rect.right && factor > this.props.minSizes.column ){
+    else if( (layout.type === 'free' || layout.type === 'column') && moving.y >= rect.bottom - 200 && moving.x >= rect.left && moving.x <= rect.right && colFactor > this.props.minSizes.column ){
       return 'row';
     }
   },

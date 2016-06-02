@@ -57,9 +57,9 @@ var Tiles = React.createClass({
           ref="wrapper"
           layout={this.state.layout}
           dimensions={ this.state.dimensions }
-          onResizeStart={ this.setState.bind(this, {resizing: true}) }
-          onResizeEnd={ this.setState.bind(this, {resizing: false}) }
-          onDragStart={ this.onDragStart.bind( this ) }
+          onResizeStart={ () => this.setState({resizing: true}) }
+          onResizeEnd={ () => this.setState({resizing: false}) }
+          onDragStart={ (e, boundaries) => this.onDragStart(e, boundaries) }
           movingTile={ this.state.moving }
           minSizes={ minSizes }
         />
