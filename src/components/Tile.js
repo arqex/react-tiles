@@ -50,7 +50,7 @@ var Tile = React.createClass({
 
     return (
       <div className={ className } style={ assign({},this.props.dimensions) } onClick={ () => this.onClick() }>
-        <div className="tilecontrols" onMouseDown={ e => this.onDragStart(e) }>
+        <div className="tilecontrols" onMouseDown={ e => this.onMoveStart(e) }>
           <a onClick={ () => this.closeTile() }>x</a>
         </div>
         { overlay }
@@ -102,29 +102,31 @@ var Tile = React.createClass({
     location.href = url;
   },
   renderResizers: function(){
-    if( this.props.layout.type !== 'floating' ){
+    var layout = this.props.layout;
+
+    if( layout.type !== 'floating' ){
       return;
     }
 
     return (
       <div className="tileResizers">
-        <div className="resizer-n" onMouseDown={ this.props.onResizeStart('n') }></div>
-        <div className="resizer-e" onMouseDown={ this.props.onResizeStart('e') }></div>
-        <div className="resizer-s" onMouseDown={ this.props.onResizeStart('s') }></div>
-        <div className="resizer-w" onMouseDown={ this.props.onResizeStart('w') }></div>
-        <div className="resizer-nw" onMouseDown={ this.props.onResizeStart('nw') }></div>
-        <div className="resizer-ne" onMouseDown={ this.props.onResizeStart('ne') }></div>
-        <div className="resizer-se" onMouseDown={ this.props.onResizeStart('se') }></div>
-        <div className="resizer-sw" onMouseDown={ this.props.onResizeStart('sw') }></div>
+        <div className="resizer-n" onMouseDown={ this.props.onResizeStart('n', layout.id) }></div>
+        <div className="resizer-e" onMouseDown={ this.props.onResizeStart('e', layout.id) }></div>
+        <div className="resizer-s" onMouseDown={ this.props.onResizeStart('s', layout.id) }></div>
+        <div className="resizer-w" onMouseDown={ this.props.onResizeStart('w', layout.id) }></div>
+        <div className="resizer-nw" onMouseDown={ this.props.onResizeStart('nw', layout.id) }></div>
+        <div className="resizer-ne" onMouseDown={ this.props.onResizeStart('ne', layout.id) }></div>
+        <div className="resizer-se" onMouseDown={ this.props.onResizeStart('se', layout.id) }></div>
+        <div className="resizer-sw" onMouseDown={ this.props.onResizeStart('sw', layout.id) }></div>
       </div>
     );
   },
   onClick: function(){
     return this.props.onClick && this.props.onClick( this.props.layout.id );
   },
-  onDragStart: function( e ){
-    if(this.props.onDragStart){
-      this.props.onDragStart( e, this.props.layout.id, ReactDom.findDOMNode(this).getBoundingClientRect() );
+  onMoveStart: function( e ){
+    if(this.props.onMoveStart){
+      this.props.onMoveStart( e, this.props.layout, ReactDom.findDOMNode(this).getBoundingClientRect() );
     }
   }
 });

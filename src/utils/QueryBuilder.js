@@ -112,12 +112,6 @@ assign( TileQueryBuilder.prototype, {
     throw new Error( 'QueryBuilder ERROR: ' + reason );
   },
   layoutToPath: function( layout, update, returnLayout ){
-    if( returnLayout ){
-      if( update ){
-        this.layout = layout;
-      }
-      return layout;
-    }
 
     var q, floating;
     if( layout.type === 'free' ){
@@ -134,11 +128,17 @@ assign( TileQueryBuilder.prototype, {
       q += '&ft=' + floating;
     }
 
-    if( update ){
-      this.setRoute( q );
+    // layout.query = q;
+    if( update ) {
+      this.layout = layout;
     }
 
-    return pathFormat + q;
+    if( returnLayout ){
+      return layout;
+    }
+    else {
+      return pathFormat + q;
+    }
   },
 
   setTile: function( ops, returnLayout ){
