@@ -192,15 +192,15 @@ var Tiles = React.createClass({
     };
   },
 
-  calculateBox: function( dockedDimensions ){
+  calculateBox: function( start, dockedDimensions ){
     var playground = this.calculateDimensions(),
       box = {}
     ;
 
     box.width = Math.min( dockedDimensions.width, playground.width / 2 );
     box.height = Math.min( dockedDimensions.height, playground.height / 2 );
-    box.left = ((dockedDimensions.width - box.width) / 2) + dockedDimensions.left;
-    box.top = ((dockedDimensions.height - box.height) / 2) + dockedDimensions.top;
+    box.left = start.left - (box.width / 2) ;
+    box.top = start.top - 20;
 
     return box;
   },
@@ -215,7 +215,7 @@ var Tiles = React.createClass({
       start = { left: e.clientX, top: e.clientY },
       tid = tile.id,
       isFloating = !!me.state.layout.floating[ tid ],
-      box = assign({}, isFloating ? me.state.floatingBoxes[ tid ] : this.calculateBox( dimensions ) ),
+      box = assign({}, isFloating ? me.state.floatingBoxes[ tid ] : this.calculateBox( start, dimensions ) ),
 			moveStarted = false, // Flag to not to stop when the movement has started
 			pos = {
 				left: box.left,
