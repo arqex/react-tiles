@@ -153,9 +153,10 @@ $time: .3s;
 .tilecontrols {
   position: absolute;
   top:0;
+  right: 15px;
   text-align: right;
   width: 100%;
-  padding: 5px 12px;
+  padding: 5px 0;
   opacity: .3;
   transition: .3s opacity;
   font-size: 1.3em;

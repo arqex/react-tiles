@@ -26,6 +26,10 @@ var TileLink = React.createClass({
   },
 
   getUrl: function(){
+    if( !this.props.to ){
+      return;
+    }
+
     var builder = TileManager.getQueryBuilder(),
       tileData = {
         route: this.props.to,
