@@ -16,12 +16,14 @@ var Tile = React.createClass({
   },
   childContextTypes: {
     tileLayout: React.PropTypes.object,
-    wrapperId: React.PropTypes.string
+    wrapperId: React.PropTypes.string,
+    builder: React.PropTypes.object
   },
   getChildContext: function(){
     return {
       tileLayout: this.props.layout,
-      wrapperId: this.props.wrapper.id
+      wrapperId: this.props.wrapper.id,
+      builder: this.props.builder
     };
   },
   render: function(){
@@ -82,7 +84,6 @@ var Tile = React.createClass({
 
     if( route.match(/https?:\/\//i) ){
       return me.setState({C: IframeTile, isIframe: true});
-
     }
 
     Router.match({ routes: props.routes, location: props.layout.route }, function(error, redirection, state){
@@ -97,8 +98,7 @@ var Tile = React.createClass({
     })
   },
   closeTile: function(){
-    var builder = require('../react-tiles').getQueryBuilder();
-    var url = builder.remove( this.props.layout.id );
+    var url = this.props.builder.remove( this.props.layout.id );
     location.href = url;
   },
   renderResizers: function(){

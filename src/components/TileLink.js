@@ -13,7 +13,8 @@ var TileManager;
 var TileLink = React.createClass({
   contextTypes: {
     tileLayout: React.PropTypes.object,
-    wrapperId: React.PropTypes.string
+    wrapperId: React.PropTypes.string,
+    builder: React.PropTypes.object
   },
 
   getInitialState: function(){
@@ -35,7 +36,7 @@ var TileLink = React.createClass({
       return;
     }
 
-    var builder = TileManager.getQueryBuilder(),
+    var builder = this.context.builder,
       tileData = {
         route: this.props.to,
         id: this.props.tile || (this.props.wrapper === 'floating' ? this.tid : this.context.tileLayout.id),

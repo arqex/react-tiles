@@ -44,8 +44,6 @@ var Tiles = React.createClass({
   },
 
   render(){
-    window.queryBuilder = this.getQueryBuilder();
-
     var className = 'tilecontainer';
     if( this.state.resizing ){
       className += ' tileresizing';
@@ -60,6 +58,7 @@ var Tiles = React.createClass({
           ref="wrapper"
           layout={this.state.layout}
           dimensions={ this.state.dimensions }
+          builder={ this.getQueryBuilder() }
           onResizeStart={ () => this.setState({resizing: true}) }
           onResizeEnd={ () => this.setState({resizing: false}) }
           onMoveStart={ this.onMoveStart }
@@ -70,6 +69,7 @@ var Tiles = React.createClass({
           minSizes={ minSizes }
           tiles={ this.state.layout.floating }
           boxes={ this.state.floatingBoxes }
+          builder={ this.getQueryBuilder() }
           onResizeStart={ this.onResizeStart }
           onMoveStart={ this.onMoveStart }
           onStopMove={ this.onStopMove } />
