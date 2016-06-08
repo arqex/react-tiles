@@ -150,15 +150,6 @@ var Tiles = React.createClass({
 
     this.setState({moving: false});
   },
-  onDragStart: function( e, tile, boundaries ){
-    console.log( boundaries );
-
-    var moving = false,
-      mm, mu
-    ;
-
-    window.addEventListener( 'mousemove', )
-  },
 
   getInitialBoxes: function( layout ){
     var boxes = {},

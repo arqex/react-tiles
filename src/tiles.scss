@@ -145,8 +145,10 @@ $time: .3s;
   z-index: -1;
 }
 
-.tileresizing .tileiframeOverlay {
-  z-index: 1;
+.tileresizing, .tilemoving {
+  .tileiframeOverlay {
+    z-index: 1;
+  }
 }
 
 
