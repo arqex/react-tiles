@@ -384,5 +384,6 @@ var Tiles = React.createClass({
 
 Tiles.Link = TileLink;
 TileLink.setManager( Tiles );
+Tiles.version = "0.2.0";
 
 module.exports = Tiles;
