@@ -14,7 +14,8 @@ var TileLink = React.createClass({
   contextTypes: {
     tileLayout: React.PropTypes.object,
     wrapperId: React.PropTypes.string,
-    builder: React.PropTypes.object
+    builder: React.PropTypes.object,
+    resolver: React.PropTypes.object
   },
 
   getInitialState: function(){
@@ -25,7 +26,7 @@ var TileLink = React.createClass({
   render: function(){
     // console.log( this.context.tileLayout );
     return (
-      <a href={ this.getUrl() } className={ this.props.className } style={ this.props.style }>
+      <a href={ this.getUrl() } className={ this.props.className } style={ this.props.style } onClick={ e => this.navigate( e ) }>
         { this.props.children }
       </a>
     );
@@ -47,6 +48,16 @@ var TileLink = React.createClass({
     ;
 
     return builder.setTile( tileData );
+  },
+
+  navigate: function( e ){
+    if( this.props.onClick ){
+      this.props.onClick( e );
+    }
+
+    e.preventDefault();
+    this.context.resolver.navigate( this.getUrl() );
+    this.tid = utils.tid('t');
   }
 });
 

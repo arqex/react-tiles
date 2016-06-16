@@ -1,6 +1,4 @@
-var React = require('react'),
-  Router = require('react-router')
-;
+var React = require('react');
 
 var IframeTile = React.createClass({
   render: function(){

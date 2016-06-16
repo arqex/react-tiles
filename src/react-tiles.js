@@ -1,6 +1,5 @@
 var React = require('react'),
   ReactDom = require('react-dom'),
-  Router = require('react-router'),
   TileWrapper = require('./components/TileWrapper'),
   FloatingWrapper = require('./components/FloatingWrapper'),
   TileLink = require('./components/TileLink'),
@@ -27,7 +26,9 @@ var Tiles = React.createClass({
       return this.getQueryBuilder().getWrapperInfo( id );
     }
 
-    this.setPathFormat();
+    // this.setPathFormat();
+
+    this.props.resolver.init( this.props );
 
     var layout = UrlParser.parse( this.getRoute() )
     return {
@@ -145,7 +146,7 @@ var Tiles = React.createClass({
         })
       ;
 
-      location.href = route;
+      this.props.resolver.navigate( route );
     }
 
     this.setState({moving: false});
@@ -301,11 +302,11 @@ var Tiles = React.createClass({
           // position before disappear
           //  delete update.floatingBoxes[ tid ];
 
-          location.href = route;
+          me.props.resolver.navigate( route );
         }
         else if( !isFloating ) {
           // we are undocking a tile, update the url
-          location.href = me.getQueryBuilder().layoutToPath( me.state.layout );
+          me.props.resolver.navigate( me.getQueryBuilder().layoutToPath( me.state.layout ) );
         }
       }
 

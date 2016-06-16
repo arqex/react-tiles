@@ -1,5 +1,4 @@
 var React = require('react'),
-  Router = require('react-router'),
   ReactDom = require('react-dom'),
   IframeTile = require('./IframeTile'),
   assign = require('object-assign')
@@ -17,13 +16,15 @@ var Tile = React.createClass({
   childContextTypes: {
     tileLayout: React.PropTypes.object,
     wrapperId: React.PropTypes.string,
-    builder: React.PropTypes.object
+    builder: React.PropTypes.object,
+    resolver: React.PropTypes.object
   },
   getChildContext: function(){
     return {
       tileLayout: this.props.layout,
       wrapperId: this.props.wrapper.id,
-      builder: this.props.builder
+      builder: this.props.builder,
+      resolver: this.props.resolver
     };
   },
   render: function(){
@@ -86,8 +87,7 @@ var Tile = React.createClass({
       return me.setState({C: IframeTile, isIframe: true});
     }
 
-    Router.match({ routes: props.routes, location: props.layout.route }, function(error, redirection, state){
-      var C = state.routes[1].component;
+    this.props.resolver.resolve( props.layout.route, function( C ){
       if( me.state.C !== C ){
         me.setState({
           C: C,
@@ -95,11 +95,11 @@ var Tile = React.createClass({
           isIframe: false
         });
       }
-    })
+    });
   },
   closeTile: function(){
     var url = this.props.builder.remove( this.props.layout.id );
-    location.href = url;
+    this.props.resolver.navigate( url );
   },
   renderResizers: function(){
     var layout = this.props.layout;
