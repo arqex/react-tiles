@@ -100,11 +100,8 @@ assign( TileQueryBuilder.prototype, {
       if( !payload.route ){
         this.throwError('`setTile` needs a route.');
       }
-      else if( !payload.target ){
+      else if( !payload.wrapper ){
         this.throwError('`setTile` needs a target.');
-      }
-      else if( this.layout.type === 'free' && !payload.type && payload.target !== this.layout.children[0].id && payload.target !== 'floating' ){
-        this.throwError('A column or row layout is needed to add a tile.');
       }
     }
   },
@@ -143,59 +140,86 @@ assign( TileQueryBuilder.prototype, {
 
   setTile: function( ops, returnLayout ){
     this.handleErrors('setTile', ops);
-    var nextLayout = cloneLayout( this.layout );
+    var nextLayout = cloneLayout( this.layout ),
+      children = nextLayout.children
+    ;
 
-    if( ops.target === 'floating' ){
+    // If the tile id exists open the route there, ignore anything else
+    // Look for it in the floating tiles
+    if( nextLayout.floating[ ops.tile ] ){
       nextLayout.floating = assign({}, nextLayout.floating);
-      nextLayout.floating[ ops.id ] = ops.route;
+      nextLayout.floating[ ops.tile ] = ops.route;
+      return this.layoutToPath( nextLayout, ops.update, returnLayout );
+    }
+    // And in the not floating ones
+    if( ops.tile ){
+      var i = children.length,
+        j
+      ;
+
+      while( i-- > 0){
+        j = children[i].children.length;
+        while( j-- > 0 ){
+          if( children[i].children[j].id === ops.tile ){
+            children[i] = cloneLayout( children[i] );
+            children[i].children[j] = cloneLayout( children[i].children[j] );
+            children[i].children[j].route = ops.route;
+
+            // Return here
+            return this.layoutToPath( nextLayout, ops.update, returnLayout );
+          }
+        }
+      }
+    }
+
+    // Check if the tile is floating
+    if( ops.wrapper === 'floating' ){
+      nextLayout.floating = assign({}, nextLayout.floating);
+      nextLayout.floating[ ops.tile ] = ops.route;
       return this.layoutToPath( nextLayout, ops.update, returnLayout );
     }
 
-    var wrapperIndex = findIndex( nextLayout, ops.target );
-    var position, wrapper;
+    var position = ops.wrapperPosition !== undefined ? ops.wrapperPosition : nextLayout.children.length,
+      wrapper = { children: [] }
+    ;
 
-    if( wrapperIndex === -1 ){
-      // Wrapper not found
-      position = ops.targetPosition !== undefined ? ops.targetPosition : nextLayout.children.length;
-      wrapper = {
-        id: ops.target,
-        children: []
-      };
+    // If the layout is free we need to create a new wrapper for the tile
+    if( nextLayout.type === 'free' ){
+      // the default layout is column one
+      nextLayout.type = ops.type === 'row' ? 'column' : 'row';
+      wrapper.type = nextLayout.type === 'row' ? 'column' : 'row';
+      children[0] = cloneLayout( children[0] );
+      children[0].type = wrapper.type;
+      wrapper.id = ops.wrapper && ops.wrapper !== children[0].id ? ops.wrapper : utils.tid( wrapper.type[0] );
 
-      if( nextLayout.type === 'free' ){
-        if( ops.target === nextLayout.children[0].id ){
-          wrapper = cloneLayout( nextLayout.children[0] );
-          wrapper.children[0] = cloneLayout( wrapper.children[0] );
-          wrapper.children[0].route = ops.route;
-          nextLayout.children[0] = wrapper;
+      // Add the wrapper to the layout
+      children.splice( position, 0, wrapper );
+    }
+    else {
+      // If the wrapper is already there use it
+      var wrapperIndex = findIndex( nextLayout, ops.wrapper );
+      if( wrapperIndex !== -1 ){
+        wrapper = cloneLayout( children[ wrapperIndex ] );
 
-          return this.layoutToPath( nextLayout, ops.update, returnLayout );
-        }
-        nextLayout.type = ops.type === 'row' ? 'column' : 'row';
-        nextLayout.children[0].type = ops.type;
-        wrapper.type = ops.type;
+        // Add the wrapper to the layout
+        children[ wrapperIndex ] = wrapper;
       }
       else {
-        wrapper.type = nextLayout.children[0].type;
+        wrapper.type = children[0].type;
+        wrapper.id = ops.wrapper || utils.tid( wrapper.type[0] );
+
+        // Add the wrapper to the layout
+        children.splice( position, 0, wrapper );
       }
-      nextLayout.children.splice( position, 0, wrapper );
-    }
-    else {
-      wrapper = assign({}, nextLayout.children[wrapperIndex], {children: nextLayout.children[wrapperIndex].children.slice()});
-      nextLayout.children[wrapperIndex] = wrapper;
     }
 
-    var tileIndex = findIndex( wrapper, ops.id );
-    if( tileIndex === -1 ){
-      position = ops.position !== undefined ? ops.position : wrapper.children.length;
-      wrapper.children.splice(position, 0, createTile( ops ) );
-    }
-    else {
-      wrapper.children[tileIndex] = assign({}, wrapper.children[tileIndex], {route: ops.route});
-    }
+    // Add the tile to the wrapper
+    wrapper.children.splice( ops.position || wrapper.children.length, 0, createTile( ops ) );
 
     return this.layoutToPath( nextLayout, ops.update, returnLayout );
   },
+
+
   getWrapperInfo: function( id ){
     var index = findIndex( this.layout, id );
     return index !== -1 && cloneLayout( this.layout.children[index] );
@@ -291,7 +315,7 @@ var findIndex = function( layout, id ){
 
 var createTile = function( ops ){
   return {
-    id: ops.id || utils.tid('t'),
+    id: ops.tile || utils.tid('t'),
     route: ops.route,
     type: 'tile'
   };

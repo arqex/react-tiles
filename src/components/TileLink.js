@@ -37,11 +37,16 @@ var TileLink = React.createClass({
       return;
     }
 
+    if( this.props.single ){
+      console.log
+      return this.props.to;
+    }
+
     var builder = this.context.builder,
       tileData = {
         route: this.props.to,
-        id: this.props.tile || (this.props.wrapper === 'floating' ? this.tid : this.context.tileLayout.id),
-        target: this.props.wrapper || this.context.wrapperId,
+        tile: this.props.tile || (this.props.wrapper ? this.tid : this.context.tileLayout.id),
+        wrapper: this.props.wrapper || this.context.wrapperId,
         type: this.props.type,
         position: this.props.position
       }

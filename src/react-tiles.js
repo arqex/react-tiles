@@ -30,7 +30,8 @@ var Tiles = React.createClass({
 
     this.props.resolver.init( this.props );
 
-    var layout = UrlParser.parse( this.getRoute() )
+    var layout = UrlParser.parse( this.getRoute() );
+    console.log( layout );
     return {
       layout: layout,
       floatingBoxes: this.getInitialBoxes( layout ),
@@ -110,6 +111,7 @@ var Tiles = React.createClass({
   componentDidUpdate(){
     if( this.state.currentLocation !== location.href ){
       var layout = UrlParser.parse(this.getRoute());
+      console.log( layout );
       this.setState({
         layout: layout,
         currentLocation: location.href,
@@ -139,10 +141,10 @@ var Tiles = React.createClass({
       builder.remove( tileData.id, true );
       var type = wrapper.isNew ? wrapper.type : 'tile',
         route = builder.setTile({
-          id: tileData.id,
+          tile: tileData.id,
           route: tileRoute,
           type: type,
-          target: wrapperId
+          wrapper: wrapperId
         })
       ;
 
@@ -242,7 +244,7 @@ var Tiles = React.createClass({
               // add it to the floating tiles
               builder = me.getQueryBuilder();
               builder.remove( tid, true );
-              nextLayout = builder.setTile( assign({}, tile, {target: 'floating'}), true, true );
+              nextLayout = builder.setTile( assign({}, {tile: tile.id, wrapper: 'floating', route: tile.route}), true, true );
               update.layout = nextLayout;
               boxes[ tid ] = box;
             }
@@ -291,10 +293,10 @@ var Tiles = React.createClass({
           builder.remove( tid, true );
           var type = wrapper.isNew ? wrapper.type : 'tile',
             route = builder.setTile({
-              id: tile.id,
+              tile: tile.id,
               route: tileRoute,
               type: type,
-              target: wrapperId
+              wrapper: wrapperId
             })
           ;
 
