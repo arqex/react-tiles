@@ -1,5 +1,5 @@
 /**
- * The resolvers are the responsible of translate the routes to components
+ * The resolvers are the responsible of translating the routes to components
  * letting react-tiles know what to display when a route is received.
  *
  * A resolver is just an object with three methods:
@@ -39,7 +39,7 @@ module.exports = {
   },
   resolve: function( path, callback ){
     Router.match({ routes: routes, location: path}, function( err, redirect, state ){
-      
+
       // We return the second level route's component, since the Tiles component
       // is used in the first lever route. Your app may update this function to
       // make route matching working ok.
