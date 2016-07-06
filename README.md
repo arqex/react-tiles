@@ -25,3 +25,4 @@ Right now there is a bunch of features missing that I would like to see in react
 * Solve `tilecontrols` bar being at the top of the tile covering the top of the content.
 * Create a way of customize the `tilecontrols`.
 * Clone the tile contents when (un)docking a tile, to preserve its internal state.
+* Create display breakpoints to adapt the tiles for mobile resolutions.

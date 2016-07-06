@@ -23,6 +23,9 @@ var cr = ('/*\n%%name%% v%%version%%\n%%homepage%%\n%%license%%: https://github.
 function wp( config, minify ){
 	var stream =  gulp.src( config.entry[0] )
 		.pipe( webpack( config ) )
+		.pipe( insert.transform( function( contents ){
+			return contents.replace('#ver#', pack.version);
+		}))
 	;
 
 	if( minify ){
