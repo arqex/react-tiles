@@ -37,6 +37,10 @@ var TileLink = React.createClass({
       return;
     }
 
+    var routeParts = this.props.to.split('#'),
+      url
+    ;
+
     if( this.props.single ){
       console.log
       return this.props.to;
@@ -44,7 +48,7 @@ var TileLink = React.createClass({
 
     var builder = this.context.builder,
       tileData = {
-        route: this.props.to,
+        route: routeParts[0],
         tile: this.props.tile || (this.props.wrapper ? this.tid : this.context.tileLayout.id),
         wrapper: this.props.wrapper || this.context.wrapperId,
         type: this.props.type,
@@ -52,7 +56,13 @@ var TileLink = React.createClass({
       }
     ;
 
-    return builder.setTile( tileData );
+    url = builder.setTile( tileData );
+
+    if( routeParts.length > 1 ){
+      url += '#' + routeParts[ routeParts.length - 1 ];
+    }
+
+    return url;
   },
 
   navigate: function( e ){

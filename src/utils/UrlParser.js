@@ -45,6 +45,10 @@ var UrlParser = {
       ;
       if( query.tw ){
         ids = query.tw.split(':');
+        if( ids[2].indexOf('#') !== -1 ){
+          // There is a fragment in the url
+          ids[2] = ids[2].split('#')[0];
+        }
         if( ids.length == 3 ){
           layoutId = ids[0];
           wrapperId = ids[1];

@@ -18,24 +18,21 @@ assign( TileQueryBuilder.prototype, {
     this.layout = layout;
   },
 
-  toColumnLayout: function( options, returnLayout ){
-    var ops = options || {},
-      layout = toLayout( this.layout, 'column', ops )
+  swapType: function( update ){
+    if( this.layout.type === 'free' ){
+      return this.layout.query;
+    }
+
+    var type = this.layout.type === 'row' ? 'column' : 'row',
+      nextLayout = toLayout( this.layout, type )
     ;
 
-    return this.layoutToPath( layout, ops.update, returnLayout );
-  },
-
-  toRowLayout: function( options, returnLayout ){
-    var ops = options || {},
-      layout = toLayout( this.layout, 'row', ops )
-    ;
-    return this.layoutToPath( layout, ops.update, returnLayout );
+    return this.layoutToPath( layout, update );
   },
 
   remove: function( id, update, returnLayout ){
     if( !id ){
-      this.throwError("`removeTile` needs a tile id.");
+      this.throwError("`remove` needs a tile id.");
     }
 
     var nextLayout = cloneLayout( this.layout ),
