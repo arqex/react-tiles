@@ -1,5 +1,5 @@
 /*
-react-tiles v0.3.2
+react-tiles v0.3.3
 https://github.com/arqex/react-tiles#readme
 MIT: https://github.com/arqex/react-tiles/raw/master/LICENSE
 */

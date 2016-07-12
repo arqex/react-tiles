@@ -1,8 +1,8 @@
 {
   "name": "react-tiles",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Tiles in react",
-  "main": "src/react-tiles.js",
+  "main": "dist/react-tiles.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
