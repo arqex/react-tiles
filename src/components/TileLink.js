@@ -71,7 +71,7 @@ var TileLink = React.createClass({
     }
 
     e.preventDefault();
-    this.context.resolver.navigate( this.getUrl() );
+    (this.context.resolver || TileManager.resolver).navigate( this.getUrl() );
     this.tid = utils.tid('t');
   }
 });

@@ -29,6 +29,7 @@ var Tiles = React.createClass({
     // this.setPathFormat();
 
     this.props.resolver.init( this.props );
+    Tiles.resolver = this.props.resolver;
 
     var layout = UrlParser.parse( this.getRoute() );
     console.log( layout );

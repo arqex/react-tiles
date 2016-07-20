@@ -1,6 +1,6 @@
 {
   "name": "react-tiles",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Tiles in react",
   "main": "dist/react-tiles.js",
   "scripts": {
