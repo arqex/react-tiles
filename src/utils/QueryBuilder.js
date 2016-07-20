@@ -97,9 +97,6 @@ assign( TileQueryBuilder.prototype, {
       if( !payload.route ){
         this.throwError('`setTile` needs a route.');
       }
-      else if( !payload.wrapper ){
-        this.throwError('`setTile` needs a target.');
-      }
     }
   },
   throwError: function( reason ){

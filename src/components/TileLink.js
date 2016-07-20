@@ -33,17 +33,17 @@ var TileLink = React.createClass({
   },
 
   getUrl: function(){
-    if( !this.props.to ){
+    var route = this.props.route || this.props.to;
+    if( !route ){
       return;
     }
 
-    var routeParts = this.props.to.split('#'),
+    var routeParts = route.split('#'),
       url
     ;
 
     if( this.props.single ){
-      console.log
-      return this.props.to;
+      return route;
     }
 
     var builder = this.context.builder,
