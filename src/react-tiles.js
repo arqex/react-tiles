@@ -4,9 +4,9 @@ var React = require('react'),
   FloatingWrapper = require('./components/FloatingWrapper'),
   TileLink = require('./components/TileLink'),
   Tile = require('./components/Tile'),
-  QueryBuilder = require('./utils/QueryBuilder'),
+  QueryBuilder = require('./utils/QueryBuilder2'),
   utils = require('./utils/TileUtils'),
-  UrlParser = require('./utils/UrlParser'),
+  UrlParser = require('./utils/UrlParser2'),
   assign = require('object-assign'),
   qs = require('qs')
 ;
@@ -245,7 +245,7 @@ var Tiles = React.createClass({
               // add it to the floating tiles
               builder = me.getQueryBuilder();
               builder.remove( tid, true );
-              nextLayout = builder.setTile( assign({}, {tile: tile.id, wrapper: 'floating', route: tile.route}), true, true );
+              nextLayout = builder.setTile( {tile: tile.id, wrapper: 'floating', route: tile.route}, true, true );
               update.layout = nextLayout;
               boxes[ tid ] = box;
             }
@@ -287,7 +287,6 @@ var Tiles = React.createClass({
         if( wrapper ){
           // Some wrapper has catched the tile
           var builder = me.getQueryBuilder(),
-            tileRoute = me.state.layout.floating[ tid ],
             wrapperId = wrapper.isNew ? utils.tid( wrapper.type[0] ) : wrapper.id
           ;
 
@@ -295,7 +294,7 @@ var Tiles = React.createClass({
           var type = wrapper.isNew ? wrapper.type : 'tile',
             route = builder.setTile({
               tile: tile.id,
-              route: tileRoute,
+              route: tile.route,
               type: type,
               wrapper: wrapperId
             })
@@ -309,7 +308,7 @@ var Tiles = React.createClass({
         }
         else if( !isFloating ) {
           // we are undocking a tile, update the url
-          me.props.resolver.navigate( me.getQueryBuilder().layoutToPath( me.state.layout ) );
+          me.props.resolver.navigate( UrlParser.stringify( me.state.layout ) );
         }
       }
 

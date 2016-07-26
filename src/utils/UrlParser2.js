@@ -6,21 +6,42 @@ var qs = require('qs'),
 var UrlParser = {
   stringify: function( layout ){
     if( layout.type === 'tile' ){
-      return layout.id + ':' + encodeURIComponent(encodeURIComponent(layout.route));
+      return layout.id + ':' + encodeURIComponent( encodeURIComponent(layout.route) );
     }
 
     var me = this,
       children = layout.children.map( function( child ){
         return me.stringify( child );
-      })
+      }),
+      query, str
     ;
 
-    var str = (layout.type === 'row' ? 'r' : 'c'),
-      query = str + ':' + layout.id + '{' + children.join(',') + '}',
-      floating = this.stringifyFloating( layout )
-    ;
+    if( layout.floating ){
+      // we are in the root layout node
+      query = assign( {}, layout.query );
 
-    return query;
+      if( layout.type === 'free' ){
+        query.tw = [layout.id, layout.children[0].id, layout.children[0].children[0].id].join(':');
+        delete query.t;
+      }
+      else {
+        str = (layout.type === 'row' ? 'r' : 'c');
+        query.t = str + ':' + layout.id + '{' + children.join(',') + '}';
+      }
+
+      if( Object.keys(layout.floating).length ){
+        query.ft = this.stringifyFloating( layout );
+      }
+      else {
+        delete query.ft;
+      }
+
+      return layout.pathname + '?' + qs.stringify( query, {encoder: qsEncoder} );
+    }
+    else {
+      str = (layout.type === 'row' ? 'r' : 'c');
+      return str + ':' + layout.id + '{' + children.join(',') + '}';
+    }
   },
 
   parse: function( route ){
@@ -39,7 +60,7 @@ var UrlParser = {
       var layoutId = 'm', // after main
         wrapperId = 'mc', // after main child
         tileId = 'mct',
-        tileQuery = assign(query),
+        tileQuery = assign({}, query),
         tileRoute = pathname,
         queryString, ids
       ;
@@ -62,7 +83,7 @@ var UrlParser = {
       delete tileQuery.tw;
       delete tileQuery.ft;
 
-      queryString = qs.stringify( tileQuery );
+      queryString = qs.stringify( tileQuery, {encoder: qsEncoder} );
       if( queryString ){
         tileRoute += '?' + queryString;
       }
@@ -100,7 +121,7 @@ var UrlParser = {
     }
     var floating = [];
     Object.keys(layout.floating).forEach( function( tid ){
-      floating.push( tid + ':' + encodeURIComponent(encodeURIComponent(layout.floating[tid])) );
+      floating.push( tid + ':' + encodeURIComponent(encodeURIComponent(layout.floating[tid].route)) );
     });
     return floating.join(',');
   },
@@ -235,19 +256,23 @@ var UrlParser = {
     if( !param ) return {};
     var tiles = param.split(','),
       floating = {},
-      parts
+      parts, route
     ;
 
     for( var i = 0; i<tiles.length; i++ ){
       parts = tiles[i].split(':');
       if( parts.length == 2 ){
-        floating[ parts[0] ] = decodeURIComponent(parts[1]);
+        route = decodeURIComponent(parts[1]);
+        floating[ parts[0] ] = utils.getRouteParts( route );
       }
     }
 
     return floating;
   }
 };
+
+// We don't need qs to encode our paramters, since they are already encoded
+var qsEncoder = function( c ) { return c; };
 
 window.parser = UrlParser;
 module.exports = UrlParser;

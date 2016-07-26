@@ -1,3 +1,5 @@
+var qs = require('qs');
+
 var idCounter = 0;
 
 var tileUtils = {
@@ -12,6 +14,14 @@ var tileUtils = {
         idCounter = validId + 1;
       }
     }
+  },
+  getRouteParts: function( route ){
+    var parts = route.split('?');
+    return {
+      pathname: parts[0],
+      query: qs.parse( parts[1] || '' ),
+      route: route
+    };
   }
 }
 

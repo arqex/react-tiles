@@ -57,7 +57,7 @@ var FloatingWrapper = React.createClass({
     return (
       <Tile {...this.props}
         key={ tileId }
-        layout={ {id: tileId, route: tile, type: 'floating'} }
+        layout={ assign({id: tileId, type: 'floating'}, tile) }
         dimensions={ this.props.boxes[ tileId ] }
         resizing={ this.state.resizing }
         onMoveStart={ this.props.onMoveStart }
