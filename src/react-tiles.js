@@ -4,14 +4,15 @@ var React = require('react'),
   FloatingWrapper = require('./components/FloatingWrapper'),
   TileLink = require('./components/TileLink'),
   Tile = require('./components/Tile'),
-  QueryBuilder = require('./utils/QueryBuilder2'),
+  QueryBuilder = require('./utils/QueryBuilder'),
   utils = require('./utils/TileUtils'),
-  UrlParser = require('./utils/UrlParser2'),
+  UrlParser = require('./utils/UrlParser'),
   assign = require('object-assign'),
   qs = require('qs')
 ;
 
 require('./tiles.scss');
+require('./utils/requestAnimationFrame');
 
 var minSizes = {
   column: 200, // For column wrappers this is the minimun height of a row
