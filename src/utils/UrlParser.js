@@ -214,11 +214,10 @@ var UrlParser = {
       layout.type = 'row';
     }
     else {
-      layout = {
-        type: 'tile',
-        id: parts[0],
-        route: decodeURIComponent(parts[1])
-      };
+      var route = decodeURIComponent(parts[1]);
+      layout = utils.getRouteParts( decodeURIComponent(parts[1]) );
+      layout.type = 'tile';
+      layout.id = parts[0];
     }
 
     utils.updateTid( layout.id );
