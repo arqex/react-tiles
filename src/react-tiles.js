@@ -1,7 +1,7 @@
 var React = require('react'),
-  ReactDom = require('react-dom'),
   TileWrapper = require('./components/TileWrapper'),
   FloatingWrapper = require('./components/FloatingWrapper'),
+  ContextQueryBuilder = require('./utils/ContextQueryBuilder'),
   TileLink = require('./components/TileLink'),
   Tile = require('./components/Tile'),
   QueryBuilder = require('./utils/QueryBuilder'),
@@ -19,9 +19,10 @@ var minSizes = {
   row: 320 // For row wrappers this is the minumum width of a column
 };
 
-var Tiles = React.createClass({
-  getInitialState: function(){
-    Tiles.getQueryBuilder = this.getQueryBuilder;
+class Tiles extends React.Component {
+  constructor(props){
+    super(props);
+    Tiles.getQueryBuilder = this.getQueryBuilder.bind(this);
 
     Tiles.getWrapperInfo = id => {
       return this.getQueryBuilder().getWrapperInfo( id );
@@ -32,9 +33,15 @@ var Tiles = React.createClass({
     this.props.resolver.init( this.props );
     Tiles.resolver = this.props.resolver;
 
+    // Bind some quick methods
+    this.onMoveStart = this.onMoveStart.bind(this);
+    this.onResizeStart = this.onResizeStart.bind(this);
+    this.onMoveStop = this.onMoveStop.bind(this);
+
     var layout = UrlParser.parse( this.getRoute() );
+    ContextQueryBuilder.update(layout);
     console.log( layout );
-    return {
+    this.state = {
       layout: layout,
       floatingBoxes: this.getInitialBoxes( layout ),
       currentLocation: location.href,
@@ -45,7 +52,7 @@ var Tiles = React.createClass({
       resizing: false,
       moving: false
     };
-  },
+  }
 
   render(){
     var className = 'tilecontainer';
@@ -57,7 +64,7 @@ var Tiles = React.createClass({
     }
 
     return (
-      <div className={ className }>
+      <div className={ className } ref={ el => this.el = el }>
         <TileWrapper {...this.props}
           ref="wrapper"
           layout={this.state.layout}
@@ -76,10 +83,10 @@ var Tiles = React.createClass({
           builder={ this.getQueryBuilder() }
           onResizeStart={ this.onResizeStart }
           onMoveStart={ this.onMoveStart }
-          onStopMove={ this.onStopMove } />
+          onMoveStop={ this.onMoveStop } />
       </div>
     );
-  },
+  }
 
   componentDidMount(){
     this.setState({ dimensions: this.calculateDimensions() });
@@ -93,26 +100,25 @@ var Tiles = React.createClass({
         this.ticking = false;
       });
     });
-  },
+
+    ContextQueryBuilder.resolver = this.props.resolver;
+  }
 
   calculateDimensions(){
-    var node = ReactDom.findDOMNode( this );
     return {
-      width: node.clientWidth,
-      height: node.clientHeight
+      width: this.el.clientWidth,
+      height: this.el.clientHeight
     };
-  },
+  }
 
   getRoute(){
-    var route = location.href.split(location.host)[1];
-    if( route.slice(0,2) == '/#' ){
-      route = route.slice(2);
-    }
-    return route;
-  },
+    return this.props.resolver.getPath();
+  }
+
   componentDidUpdate(){
+    var layout = this.state.layout;
     if( this.state.currentLocation !== location.href ){
-      var layout = UrlParser.parse(this.getRoute());
+      layout = UrlParser.parse(this.getRoute());
       console.log( layout );
       this.setState({
         layout: layout,
@@ -120,19 +126,23 @@ var Tiles = React.createClass({
         floatingBoxes: this.refreshBoxes( layout )
       });
     }
-  },
+    ContextQueryBuilder.update(layout);
+  }
+
   getQueryBuilder(){
     var queryBuilder = new QueryBuilder('/');
     queryBuilder.setLayout( this.state.layout );
     return queryBuilder;
-  },
+  }
+
   setPathFormat(){
     var routeParts = location.href.split(location.host);
     if( routeParts[1] && routeParts[1].slice(0,2) === '/#' ){
       QueryBuilder.setPathFormat('/#');
     }
-  },
-  onStopMove: function( tileData ){
+  }
+
+  onMoveStop( tileData ){
     var wrapper = this.refs.wrapper.receiveTile( tileData );
     if( wrapper ){
       var builder = this.getQueryBuilder(),
@@ -154,9 +164,9 @@ var Tiles = React.createClass({
     }
 
     this.setState({moving: false});
-  },
+  }
 
-  getInitialBoxes: function( layout ){
+  getInitialBoxes( layout ){
     var boxes = {},
       i = 0
     ;
@@ -164,7 +174,7 @@ var Tiles = React.createClass({
       boxes[ tileId ] = this.getInitialBox(i++);
     });
     return boxes;
-  },
+  }
 
   refreshBoxes( layout ){
     var boxes = {},
@@ -177,18 +187,18 @@ var Tiles = React.createClass({
     });
 
     return boxes;
-  },
+  }
 
-  getInitialBox: function( i ){
+  getInitialBox( i ){
     return {
       width: 400,
       height: 300,
       top: 100 + 50*i,
       left: 100 + 50*i
     };
-  },
+  }
 
-  calculateBox: function( start, dockedDimensions ){
+  calculateBox( start, dockedDimensions ){
     var playground = this.calculateDimensions(),
       box = {}
     ;
@@ -199,9 +209,9 @@ var Tiles = React.createClass({
     box.top = start.top - 20;
 
     return box;
-  },
+  }
 
-  onMoveStart: function( e, tile, dimensions ){
+  onMoveStart( e, tile, dimensions ){
 
 		// Only left click and not a control
 		if( e.button || e.target.tagName.toLowerCase() == 'a' )
@@ -320,8 +330,9 @@ var Tiles = React.createClass({
 			window.removeEventListener( 'mousemove', mm );
 			window.removeEventListener( 'mouseup', mu );
 		});
-	},
-  onResizeStart: function( direction, tid ){
+	}
+
+  onResizeStart( direction, tid ){
 		var me = this;
 
 		return function( e ){
@@ -383,11 +394,11 @@ var Tiles = React.createClass({
 				window.removeEventListener( 'mouseup', mu );
 			});
 		};
-	},
-});
+	}
+};
 
 Tiles.Link = TileLink;
-TileLink.setManager( Tiles );
-Tiles.version = "0.3.1";
+Tiles.version = "0.5.0";
+Tiles.Tile = Tile;
 
 module.exports = Tiles;

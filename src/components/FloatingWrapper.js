@@ -1,28 +1,29 @@
 var React = require('react'),
   Tile = require('./Tile'),
   assign = require('object-assign'),
-  Animate = require('rc-animate'),
+  Animate = require('rc-animate').default,
   utils = require('../utils/TileUtils')
 ;
 
-var FloatingWrapper = React.createClass({
-  getInitialState: function(){
+class FloatingWrapper extends React.Component {
+  constructor(props){
+    super(props);
     var dimensions = {},
       i = 0
     ;
 
-    Object.keys(this.props.tiles).forEach( tileId => {
+    Object.keys(props.tiles).forEach( tileId => {
       dimensions[ tileId ] = this.getInitialTileDimensions(i++);
     });
 
-    return {
+    this.state = {
       dimensions: dimensions,
       moving: false,
       currentTile: false
     };
-  },
+  }
 
-  render: function(){
+  render(){
     var className = 'floatingWrapper';
 
     return (
@@ -30,8 +31,9 @@ var FloatingWrapper = React.createClass({
         { this.renderTiles() }
       </Animate>
     );
-  },
-  renderTiles: function() {
+  }
+
+  renderTiles() {
     var tiles = this.props.tiles,
       me = this,
       floating = [],
@@ -50,9 +52,9 @@ var FloatingWrapper = React.createClass({
     }
 
     return floating;
-  },
+  }
 
-  renderTile: function( tileId ){
+  renderTile( tileId ){
     var tile = this.props.tiles[ tileId ];
     return (
       <Tile {...this.props}
@@ -66,9 +68,9 @@ var FloatingWrapper = React.createClass({
         isCurrentTile={ tileId === this.state.currentTile }
         wrapper={ {id: 'floating', type: 'floating'} } />
     );
-  },
+  }
 
-  componentWillReceiveProps: function( nextProps ){
+  componentWillReceiveProps( nextProps ){
     if( nextProps.tiles !== this.props.tiles ){
       var i = Object.keys(this.state.dimensions).length,
         dimensions = {},
@@ -87,16 +89,15 @@ var FloatingWrapper = React.createClass({
       update.dimensions = dimensions;
       this.setState( update );
     }
-  },
-  getInitialTileDimensions: function( i ){
+  }
+  getInitialTileDimensions( i ){
     return {
       width: 400,
       height: 300,
       top: 100 + 50*i,
       left: 100 + 50*i
     }
-  },
-
-});
+  }
+};
 
 module.exports = FloatingWrapper;

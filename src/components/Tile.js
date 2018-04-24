@@ -4,36 +4,27 @@ var React = require('react'),
   assign = require('object-assign')
 ;
 
-var Tile = React.createClass({
-  getInitialState: function(){
-    return {
+class Tile extends React.Component {
+  constructor( props ){
+    super(props);
+    this.state = {
       firstRendering: true,
-      route: this.props.layout.route,
+      route: props.layout.route,
       isIframe: false,
       C: false
     };
-  },
-  childContextTypes: {
-    tileLayout: React.PropTypes.object,
-    wrapperId: React.PropTypes.string,
-    builder: React.PropTypes.object,
-    resolver: React.PropTypes.object
-  },
-  getChildContext: function(){
-    return {
-      tileLayout: this.props.layout,
-      wrapperId: this.props.wrapper.id,
-      builder: this.props.builder,
-      resolver: this.props.resolver
-    };
-  },
-  render: function(){
+
+    this.resizeKeys = ['n','e','s','w','nw','ne','se','sw'];
+  }
+
+  render(){
     var className = 'singletile ' + this.props.layout.id + ' ' + this.props.wrapper.type + 'singletile',
       C = this.state.C,
       content, overlay
     ;
 
     if( C ){
+      className += ' tile_' + C.name;
       content = <C {...this.props} />;
     }
 
@@ -52,9 +43,9 @@ var Tile = React.createClass({
     }
 
     return (
-      <div className={ className } style={ assign({},this.props.dimensions) } onClick={ () => this.onClick() }>
+      <div ref={ el => this.el = el } data-wrapper={ this.props.wrapper.id} data-layout={ this.props.layout.id} className={ className } style={ assign({},this.props.dimensions) } onClick={ () => this.onClick() }>
         <div className="tilecontrols" onMouseDown={ e => this.onMoveStart(e) }>
-          <a onClick={ () => this.closeTile() }>x</a>
+          { this.renderControls() }
         </div>
         { overlay }
         <TileContent resizing={ this.props.resizing }>
@@ -63,27 +54,27 @@ var Tile = React.createClass({
         { this.renderResizers() }
       </div>
     )
-  },
-  componentDidMount: function(){
+  }
+  componentDidMount(){
     var me = this;
     setTimeout( function(){
       me.setState({firstRendering: false});
     });
     this.updateRouteComponent( this.props );
-  },
+  }
 
   componentWillReceiveProps( nextProps ){
-    if( this.state.route !== nextProps.layout.route ){
+    if( nextProps.layout.route && nextProps.layout.route !== "undefined" && this.state.route !== nextProps.layout.route ){
       this.updateRouteComponent( nextProps );
     }
-  },
+  }
 
-  updateRouteComponent: function( props ){
+  updateRouteComponent( props ){
     var me = this,
       route = props.layout.route
     ;
 
-    if( route.match(/https?:\/\//i) ){
+    if( route.match(/^https?:\/\//i) ){
       return me.setState({C: IframeTile, isIframe: true});
     }
 
@@ -96,54 +87,56 @@ var Tile = React.createClass({
         });
       }
     });
-  },
-  closeTile: function(){
+  }
+  closeTile(){
     var url = this.props.builder.remove( this.props.layout.id );
     this.props.resolver.navigate( url );
-  },
-  renderResizers: function(){
-    var layout = this.props.layout;
-
-    if( layout.type !== 'floating' ){
+  }
+  renderControls(){
+    return (
+      <a onClick={ () => this.closeTile() }>x</a>
+    );
+  }
+  renderResizers(){
+    if( this.props.layout.type !== 'floating' ){
       return;
     }
 
+    var resizers = this.resizeKeys.map( k => (
+      <div key={k}
+        className={"resizer-" + k}
+        onMouseDown={ this.props.onResizeStart(k, this.props.layout.id) } />
+    ));
+
     return (
       <div className="tileResizers">
-        <div className="resizer-n" onMouseDown={ this.props.onResizeStart('n', layout.id) }></div>
-        <div className="resizer-e" onMouseDown={ this.props.onResizeStart('e', layout.id) }></div>
-        <div className="resizer-s" onMouseDown={ this.props.onResizeStart('s', layout.id) }></div>
-        <div className="resizer-w" onMouseDown={ this.props.onResizeStart('w', layout.id) }></div>
-        <div className="resizer-nw" onMouseDown={ this.props.onResizeStart('nw', layout.id) }></div>
-        <div className="resizer-ne" onMouseDown={ this.props.onResizeStart('ne', layout.id) }></div>
-        <div className="resizer-se" onMouseDown={ this.props.onResizeStart('se', layout.id) }></div>
-        <div className="resizer-sw" onMouseDown={ this.props.onResizeStart('sw', layout.id) }></div>
+        { resizers }
       </div>
     );
-  },
-  onClick: function(){
+  }
+  onClick(){
     return this.props.onClick && this.props.onClick( this.props.layout.id );
-  },
-  onMoveStart: function( e ){
-    if(this.props.onMoveStart){
-      this.props.onMoveStart( e, this.props.layout, ReactDom.findDOMNode(this).getBoundingClientRect() );
+  }
+  onMoveStart( e ){
+    if(this.props.onMoveStart && e.target.tagName !== 'INPUT'){
+      this.props.onMoveStart( e, this.props.layout, this.el.getBoundingClientRect() );
     }
   }
-});
+};
 
 // This is a dumb component that prevents the content of a tile to be re-rendered
 // in a tile resize
-var TileContent = React.createClass({
-  render: function(){
+class TileContent extends React.Component {
+  render(){
     return (
       <div className="tilecontent">
         { this.props.children }
       </div>
     );
-  },
-  shouldComponentUpdate: function(){
+  }
+  shouldComponentUpdate(){
     return !this.props.resizing;
   }
-})
+}
 
 module.exports = Tile;

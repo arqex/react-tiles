@@ -18,7 +18,7 @@ $time: .3s;
     transition: height $time;
     width: 100% !important;
 
-    border-top: 3px solid #ccc;
+    border-top: 3px solid #d6d6d6;
     &:first-child {
       border-top: 0;
     }
@@ -43,7 +43,7 @@ $time: .3s;
 
   &>.tilewrapper, &>.singletile {
     transition: width $time;
-    border-left: 3px solid #ccc;
+    border-left: 3px solid #d6d6d6;
     &:first-child {
       border-left: 0;
     }
@@ -117,13 +117,13 @@ $time: .3s;
   height: 100%;
   width: 3px;
   top: 0;
-  cursor: e-resize;
+  cursor: ew-resize;
 }
 .separator-column {
   width: 100%;
   height: 3px;
   left: 0;
-  cursor: n-resize;
+  cursor: ns-resize;
 }
 
 .tileiframe {
@@ -150,7 +150,6 @@ $time: .3s;
     z-index: 1;
   }
 }
-
 
 .tilecontrols {
   position: absolute;
@@ -223,7 +222,7 @@ $time: .3s;
 	width: 100%;
 	left: 0;
 	top: -2px;
-	cursor: n-resize;
+	cursor: ns-resize;
 }
 .resizer-ne {
 	width: 5px;
@@ -231,14 +230,14 @@ $time: .3s;
 	z-index: 6;
 	top: -2px;
 	right: -2px;
-	cursor: ne-resize;
+	cursor: nesw-resize;
 }
 .resizer-e {
 	width: 5px;
 	height: 100%;
 	top: -2px;
 	right: -2px;
-	cursor: e-resize;
+	cursor: ew-resize;
 }
 .resizer-se {
 	width: 5px;
@@ -246,14 +245,14 @@ $time: .3s;
 	z-index: 6;
 	bottom: -2px;
 	right: -2px;
-	cursor: se-resize;
+	cursor: nwse-resize;
 }
 .resizer-s {
 	height: 5px;
 	width: 100%;
 	left: -2px;
 	bottom: -2px;
-	cursor: n-resize;
+	cursor: ns-resize;
 }
 .resizer-sw {
 	width: 5px;
@@ -261,14 +260,14 @@ $time: .3s;
 	z-index: 6;
 	bottom: -2px;
 	left: -2px;
-	cursor: ne-resize;
+	cursor: nesw-resize;
 }
 .resizer-w {
 	width: 5px;
 	height: 100%;
 	top: -2px;
 	left: -2px;
-	cursor: e-resize;
+	cursor: ew-resize;
 }
 .resizer-nw {
 	width: 5px;
@@ -276,11 +275,11 @@ $time: .3s;
 	z-index: 6;
 	top: -2px;
 	left: -2px;
-	cursor: se-resize;
+	cursor: nwse-resize;
 }
 
 .tileph {
-  background: #ccc;
+  background: #d6d6d6;
   float: left;
   position: absolute;
   transition: width $time, height $time, opacity $time;
@@ -320,4 +319,9 @@ $time: .3s;
     height: 0%;
     opacity:0;
   }
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
 }

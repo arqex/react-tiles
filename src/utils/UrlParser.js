@@ -21,6 +21,8 @@ var UrlParser = {
       query = assign( {}, layout.query );
 
       if( layout.type === 'free' ){
+        query = layout.children[0].children[0].query;
+        layout.pathname = layout.children[0].children[0].pathname;
         query.tw = [layout.id, layout.children[0].id, layout.children[0].children[0].id].join(':');
         delete query.t;
       }
@@ -121,7 +123,7 @@ var UrlParser = {
     }
     var floating = [];
     Object.keys(layout.floating).forEach( function( tid ){
-      floating.push( tid + ':' + encodeURIComponent(encodeURIComponent(layout.floating[tid].route)) );
+      floating.push( tid + ':' + encodeURIComponent(encodeURIComponent(layout.floating[tid].route || layout.floating[tid])) );
     });
     return floating.join(',');
   },

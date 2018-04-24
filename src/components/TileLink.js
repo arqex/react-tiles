@@ -1,40 +1,33 @@
 var React = require('react');
 var utils = require('../utils/TileUtils');
+var ContextQueryBuilder = require('../utils/ContextQueryBuilder')
 
-var TileManager;
 /**
  * A component to load new routes on the layout. By default it opens the route
  * in the current tile, but it's possible to specify the tileId of the tile to open
  * the route.
  * If the tile is given and it can be found on the layout, it creates a new tile.
  * It's possible to pass "floating" as the wrapper to make the tile floating.
- *
  */
-var TileLink = React.createClass({
-  contextTypes: {
-    tileLayout: React.PropTypes.object,
-    wrapperId: React.PropTypes.string,
-    builder: React.PropTypes.object,
-    resolver: React.PropTypes.object
-  },
-
-  getInitialState: function(){
+class TileLink extends React.Component {
+  constructor(props){
+    super(props);
     this.tid = utils.tid('t');
-    return {};
-  },
+    this.state = {};
+  }
 
-  render: function(){
-    // console.log( this.context.tileLayout );
+  render(){
+
     return (
-      <a href={ this.getUrl() } className={ this.props.className } style={ this.props.style } onClick={ e => this.navigate( e ) }>
+      <a href={ this.getUrl() } className={ this.props.className } style={ this.props.style } onClick={ e => this.navigate( e ) } ref={link => this.link = link}>
         { this.props.children }
       </a>
     );
-  },
+  }
 
-  getUrl: function(){
-    var route = this.props.route || this.props.to;
-    if( !route ){
+  getUrl( routeUrl ){
+    var route = routeUrl || this.props.route || this.props.to;
+    if( route === undefined ){
       return;
     }
 
@@ -46,38 +39,49 @@ var TileLink = React.createClass({
       return route;
     }
 
-    var builder = this.context.builder,
-      tileData = {
-        route: routeParts[0],
-        tile: this.props.tile || (this.props.wrapper ? this.tid : this.context.tileLayout.id),
-        wrapper: this.props.wrapper || this.context.wrapperId,
+    var ids = this.getIds();
+
+    var tileData = {
+        route: routeParts[0] || '/',
+        tile: this.props.tile || (this.props.wrapper ? this.tid : ids.layout),
+        wrapper: this.props.wrapper || ids.wrapper,
         type: this.props.type,
         position: this.props.position
       }
     ;
 
-    url = builder.setTile( tileData );
+    url = ContextQueryBuilder.setTile( tileData );
 
     if( routeParts.length > 1 ){
       url += '#' + routeParts[ routeParts.length - 1 ];
     }
 
     return url;
-  },
+  }
 
-  navigate: function( e ){
+  navigate( e, url ){
     if( this.props.onClick ){
       this.props.onClick( e );
     }
 
-    e.preventDefault();
-    (this.context.resolver || TileManager.resolver).navigate( this.getUrl() );
+    e && e.preventDefault();
+    ContextQueryBuilder.resolver.navigate( this.getUrl(url) );
     this.tid = utils.tid('t');
   }
-});
 
-TileLink.setManager = function( tm ){
-  TileManager = tm;
-}
+  getIds( node ){
+    var n = node || this.link;
+    if( !n ) return {};
+    if( n.dataset.wrapper ){
+      return {
+        wrapper: n.dataset.wrapper,
+        layout: n.dataset.layout
+      };
+    }
+    else {
+      return this.getIds( n.parentNode );
+    }
+  }
+};
 
 module.exports = TileLink;
