@@ -1,4 +1,7 @@
 ## Changelog
+### v0.5.1
+* Updates dist folder
+
 ### v0.5.0
 This is an emergency release that adapts react-tiles to the modern times in a very harsh way. We should think about a good refactoring if the project grasp some attention from developers.
 

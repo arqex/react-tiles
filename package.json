@@ -1,10 +1,11 @@
 {
   "name": "react-tiles",
-  "version": "0.5.0",
+  "version": "0.5.2",
   "description": "Tiles in react",
-  "main": "dist/react-tiles.js",
+  "main": "src/react-tiles.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha-webpack --webpack-config webpack.test.config.js \"tests/**/*.test.js\""
+    "test": "node_modules/.bin/mocha-webpack --webpack-config webpack.test.config.js \"tests/**/*.test.js\"",
+    "build": "node_modules/.bin/gulp"
   },
   "repository": {
     "type": "git",
@@ -27,9 +28,9 @@
   },
   "devDependencies": {
     "autoprefixer-core": "^6.0.1",
-    "babel-core": "^6.9.1",
-    "babel-loader": "^6.2.4",
-    "babel-preset-es2015": "^6.9.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-react": "^6.24.1",
     "css-loader": "^0.23.1",
     "gulp": "^3.9.1",
     "gulp-insert": "^0.5.0",
@@ -40,7 +41,7 @@
     "postcss-loader": "^0.9.1",
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.1",
-    "webpack": "^1.13.1",
+    "webpack": "2.2.1",
     "webpack-node-externals": "^1.3.0"
   }
 }

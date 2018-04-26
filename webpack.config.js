@@ -1,5 +1,5 @@
 var webpack = require('webpack');
-var autoprefixer = require('autoprefixer-core');
+// var autoprefixer = require('autoprefixer-core');
 
 var plugins = [
   new webpack.DefinePlugin({
@@ -18,14 +18,36 @@ module.exports = {
   },
 
 	module: {
-		loaders: [
-			{ test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules/, query: {presets: ['es2015', 'react']} },
-			{ test: /\.scss$/, loader: "style!css!postcss-loader!sass" }
-		]
-	},
+    rules: [
+      {
+        test: /\.css$/,
+        loader: "style-loader!css-loader",
+        exclude: /node_modules/
+      },
+      {
+        test: /\.html$/,
+        loader: "html-loader",
+        exclude: /node_modules/
+      },
+      {
+        test: /\.(js|jsx)$/,
+        loader: "babel-loader",
+        exclude: /node_modules/
+      }, {
+				test: /\.(sass|scss)$/,
+				use: [{
+            loader: "style-loader" // creates style nodes from JS strings
+        }, {
+            loader: "css-loader" // translates CSS into CommonJS
+        }, {
+            loader: "sass-loader" // compiles Sass to CSS
+        }]
+			}
+    ]
+  },
 
   resolve: {
-    extensions: ['', '.js', '.scss']
+    extensions: ['.js', '.scss']
   },
 
   externals: {
@@ -43,6 +65,5 @@ module.exports = {
     }
   },
 
-  plugins: plugins,
-	postcss: [ autoprefixer ]
+  plugins: plugins
 };

@@ -1,5 +1,5 @@
 var React = require('react'),
-  ReactDom = require('react-dom'),
+  ReactDOM = require('react-dom'),
   IframeTile = require('./IframeTile'),
   assign = require('object-assign')
 ;

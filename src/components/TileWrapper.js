@@ -1,5 +1,5 @@
 var React = require('react'),
-  ReactDom = require('react-dom'),
+  ReactDOM = require('react-dom'),
   Tile = require('./Tile'),
   Animate = require('rc-animate').default,
   utils = require('../utils/TileUtils')
@@ -253,7 +253,7 @@ class TileWrapper extends React.Component {
       offset = type === 'row' ? 'left' : 'top',
       size = type === 'row' ? 'width' : 'height',
       dimension = type === 'row' ? 'clientX' : 'clientY',
-      wrapper = ReactDom.findDOMNode(this).getBoundingClientRect(),
+      wrapper = ReactDOM.findDOMNode(this).getBoundingClientRect(),
       updatingSizes = {
         wrapperOffset: wrapper[offset],
         wrapperSize: wrapper[size],
@@ -325,7 +325,7 @@ class TileWrapper extends React.Component {
       this.setState({rect:false});
     }
     else if( !prevProps.movingTile && this.props.movingTile ){
-      this.setState({rect: ReactDom.findDOMNode(this).getBoundingClientRect()});
+      this.setState({rect: ReactDOM.findDOMNode(this).getBoundingClientRect()});
     }
   }
 
