@@ -3,17 +3,7 @@ react-tiles v0.5.2
 https://github.com/arqex/react-tiles#readme
 MIT: https://github.com/arqex/react-tiles/raw/master/LICENSE
 */
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("react"), require("react-dom"));
-	else if(typeof define === 'function' && define.amd)
-		define(["React", "ReactDOM"], factory);
-	else if(typeof exports === 'object')
-		exports["react-tiles"] = factory(require("react"), require("react-dom"));
-	else
-		root["react-tiles"] = factory(root["React"], root["ReactDOM"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_0__, __WEBPACK_EXTERNAL_MODULE_35__) {
-return /******/ (function(modules) { // webpackBootstrap
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -85,7 +75,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports) {
 
-eval("module.exports = __WEBPACK_EXTERNAL_MODULE_0__;\n\n//////////////////\n// WEBPACK FOOTER\n// external {\"root\":\"React\",\"commonjs\":\"react\",\"commonjs2\":\"react\",\"amd\":\"React\"}\n// module id = 0\n// module chunks = 0\n\n//# sourceURL=webpack:///external_%7B%22root%22:%22React%22,%22commonjs%22:%22react%22,%22commonjs2%22:%22react%22,%22amd%22:%22React%22%7D?");
+eval("module.exports = undefined;\n\n//////////////////\n// WEBPACK FOOTER\n// external {\"root\":\"React\",\"commonjs\":\"react\",\"commonjs2\":\"react\",\"amd\":\"React\"}\n// module id = 0\n// module chunks = 0\n\n//# sourceURL=webpack:///external_%7B%22root%22:%22React%22,%22commonjs%22:%22react%22,%22commonjs2%22:%22react%22,%22amd%22:%22React%22%7D?");
 
 /***/ }),
 /* 1 */
@@ -298,7 +288,7 @@ eval("exports.f = __webpack_require__(11);\n\n\n//////////////////\n// WEBPACK F
 /* 35 */
 /***/ (function(module, exports) {
 
-eval("module.exports = __WEBPACK_EXTERNAL_MODULE_35__;\n\n//////////////////\n// WEBPACK FOOTER\n// external {\"root\":\"ReactDOM\",\"commonjs\":\"react-dom\",\"commonjs2\":\"react-dom\",\"amd\":\"ReactDOM\"}\n// module id = 35\n// module chunks = 0\n\n//# sourceURL=webpack:///external_%7B%22root%22:%22ReactDOM%22,%22commonjs%22:%22react-dom%22,%22commonjs2%22:%22react-dom%22,%22amd%22:%22ReactDOM%22%7D?");
+eval("module.exports = undefined;\n\n//////////////////\n// WEBPACK FOOTER\n// external {\"root\":\"ReactDOM\",\"commonjs\":\"react-dom\",\"commonjs2\":\"react-dom\",\"amd\":\"ReactDOM\"}\n// module id = 35\n// module chunks = 0\n\n//# sourceURL=webpack:///external_%7B%22root%22:%22ReactDOM%22,%22commonjs%22:%22react-dom%22,%22commonjs2%22:%22react-dom%22,%22amd%22:%22ReactDOM%22%7D?");
 
 /***/ }),
 /* 36 */
@@ -856,4 +846,3 @@ eval("module.exports = __webpack_require__(61);\n\n\n//////////////////\n// WEBP
 
 /***/ })
 /******/ ]);
-});

@@ -12,8 +12,8 @@ module.exports = {
 
   output: {
     path: __dirname + "/dist/",
-    library: 'react-tiles',
-    libraryTarget: 'umd',
+    // library: 'react-tiles',
+    // libraryTarget: 'umd',
     filename: 'react-tiles.js'
   },
 

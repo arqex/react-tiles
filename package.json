@@ -1,8 +1,8 @@
 {
   "name": "react-tiles",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Tiles in react",
-  "main": "src/react-tiles.js",
+  "main": "dist/react-tiles.js",
   "scripts": {
     "test": "node_modules/.bin/mocha-webpack --webpack-config webpack.test.config.js \"tests/**/*.test.js\"",
     "build": "node_modules/.bin/gulp"
