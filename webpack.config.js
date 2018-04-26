@@ -50,20 +50,5 @@ module.exports = {
     extensions: ['.js', '.scss']
   },
 
-  externals: {
-    'react': {
-      root: 'React',
-      commonjs: 'react',
-      commonjs2: 'react',
-      amd: 'React'
-    },
-    'react-dom': {
-      root: 'ReactDOM',
-      commonjs: 'react-dom',
-      commonjs2: 'react-dom',
-      amd: 'ReactDOM'
-    }
-  },
-
   plugins: plugins
 };

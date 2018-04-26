@@ -1,6 +1,6 @@
 {
   "name": "react-tiles",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Tiles in react",
   "main": "dist/react-tiles.js",
   "scripts": {
@@ -25,6 +25,10 @@
     "object-assign": "^4.1.0",
     "qs": "^6.2.0",
     "rc-animate": "^2.4.4"
+  },
+  "peerDependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
   },
   "devDependencies": {
     "autoprefixer-core": "^6.0.1",
