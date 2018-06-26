@@ -1,0 +1,45 @@
+{
+  "name": "react-tiles",
+  "version": "2.0.0",
+  "description": "Tiles in react",
+  "main": "dist/react-tiles.js",
+  "scripts": {
+    "test": "node_modules/.bin/mocha-webpack --webpack-config webpack.test.config.js \"tests/**/*.test.js\"",
+    "build": "node_modules/.bin/webpack --config ./config/webpack.dev.js && node_modules/.bin/webpack --config ./config/webpack.prod.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arqex/react-tiles.git"
+  },
+  "keywords": [
+    "react",
+    "tiles"
+  ],
+  "author": "Javier Marquez <arqex.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/arqex/react-tiles/issues"
+  },
+  "homepage": "https://github.com/arqex/react-tiles#readme",
+  "dependencies": {
+    "qs": "^6.2.0"
+  },
+  "peerDependencies": {
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "css-loader": "^0.28.11",
+    "mocha": "^5.2.0",
+    "mocha-webpack": "^1.1.0",
+    "sass-loader": "^7.0.3",
+    "style-loader": "^0.21.0",
+    "webpack": "4.12.0",
+    "webpack-command": "^0.2.1",
+    "uglifyjs-webpack-plugin": "^1.2.5"
+  }
+}

@@ -1,0 +1,206 @@
+.rtcontainer {
+  position: relative;
+  height: 100%;
+  background: #999;
+}
+
+.rtile {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background: #f9f9f9;
+  box-shadow: 0 0 2px rgba(0,0,0,.3);
+  transition: box-shadow .3s, width .3s, height .3s, transform .3s, top .3s, left .3s, opacity .3s;
+
+  &.floating {
+    z-index: 3;
+    box-shadow: 0 2px 20px rgba(0,0,0,.2);
+    transform: none !important;
+
+    &.moving {
+      box-shadow: 0 2px 30px rgba(0,0,0,.3);
+      z-index: 5;
+    }
+  }
+
+  iframe {
+    width: 100%; height: 100%;
+    border: 0;
+  }
+
+  &.docking {
+    transition: box-shadow .3s, width .3s, height .3s, transform .3s, top .3s, left .3s !important;
+    z-index: 1001 !important;
+  }
+
+  &.deleting {
+    transition: transform .3s, opacity .3s;
+    transform: scale(1.8);
+    opacity: 0;
+  }
+
+  &.mounting {
+    transform: scale(.2);
+    opacity: 0;
+  }
+}
+
+.rtseparator {
+  position: absolute;
+  z-index: 1000;
+  background: yellow;
+  transition: width .3s, height .3s, top .3s, left .3s, opacity .3s, transform .3s;
+
+  &.rtmounting {
+    opacity: 0;
+  }
+
+  &.rtsv {
+    width: 5px;
+    margin-left: -2px;
+    cursor: ew-resize;
+    &.rtmounting {
+      height: 0 !important;
+    }
+  }
+
+  &.rtsh {
+    height: 5px;
+    margin-top: -2px;
+    cursor: ns-resize;
+    &.rtmounting {
+      width: 0 !important;
+    }
+  }
+}
+
+.tIframeOverlay {
+  z-index: -1;
+  position: absolute;
+  width: 100%; height: 100%;
+}
+
+.rtupdating {
+  user-select: none;
+  -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
+
+  .tIframeOverlay {
+    z-index: 10000;
+  }
+}
+
+.rtmoving {
+  .rtile.moving {
+    transition: box-shadow .3s, transform .3s, width .3s, height .3s;
+  }
+}
+.rtseparatorMoving {
+  .rtile {
+    transition: box-shadow .3s, transform .3s;
+  }
+  .rtseparator {
+    transition: transform .3s;
+  }
+}
+
+.rtheader {
+  height: 50px;
+  background: red;
+}
+
+.rtcontent {
+  flex-grow: 1;
+}
+
+.trResizers>div {
+	position: absolute;
+	z-index: 5;
+  background: #0f0;
+}
+
+.trresizer-n {
+	height: 5px;
+	width: 100%;
+	left: 0;
+	top: -2px;
+	cursor: ns-resize;
+}
+.trresizer-ne {
+	width: 5px;
+	height: 5px;
+	z-index: 6;
+	top: -2px;
+	right: -2px;
+	cursor: nesw-resize;
+}
+.trresizer-e {
+	width: 5px;
+	height: 100%;
+	top: -2px;
+	right: -2px;
+	cursor: ew-resize;
+}
+.trresizer-se {
+	width: 5px;
+	height: 5px;
+	z-index: 6;
+	bottom: -2px;
+	right: -2px;
+	cursor: nwse-resize;
+}
+.trresizer-s {
+	height: 5px;
+	width: 100%;
+	left: -2px;
+	bottom: -2px;
+	cursor: ns-resize;
+}
+.trresizer-sw {
+	width: 5px;
+	height: 5px;
+	z-index: 6;
+	bottom: -2px;
+	left: -2px;
+	cursor: nesw-resize;
+}
+.trresizer-w {
+	width: 5px;
+	height: 100%;
+	top: -2px;
+	left: -2px;
+	cursor: ew-resize;
+}
+.trresizer-nw {
+	width: 5px;
+	height: 5px;
+	z-index: 6;
+	top: -2px;
+	left: -2px;
+	cursor: nwse-resize;
+}
+
+
+/* placeholders */
+.rtcolumn.rtwph {
+  .rtile, .rtseparator {
+    transform: translateX( -200px );
+  }
+}
+
+.rtrow.rtwph {
+  .rtile, .rtseparator {
+    transform: translateY( -200px );
+  }
+}
+
+.rtrow .rttph {
+  transform: translateX( -200px );
+}
+.rtcolumn .rttph {
+  transform: translateY( -200px );
+}
+
+.rtclose {
+  float: right;
+  margin: 16px 16px 0 0;
+}
