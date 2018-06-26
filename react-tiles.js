@@ -116,6 +116,7 @@ class Tiles extends Component {
           floating={ !ltile.wrapper }
           url={ ltile.location.route }
           style={ style }
+          resolver={ this.props.resolver }
           updating={ updating } />
       );
     });

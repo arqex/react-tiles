@@ -37,7 +37,7 @@ class Tile extends React.Component {
         <div className="rtheader" onMouseDown={ this.onMoveStart }>
           { this.renderTileHeader() }
         </div>
-        <TileContent url={ this.props.url } />
+        <TileContent tid={ this.props.tid } url={ this.props.url } resolver={ this.props.resolver } />
         { this.renderResizers() }
       </div>
     );
@@ -164,11 +164,17 @@ class Tile extends React.Component {
 };
 
 class TileContent extends React.Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      component: !this.isIframe(props.url) && props.resolver.resolve( props.url )
+    }
+  }
   render(){
-    var C = this.props.component;
+    var C = this.state.component;
 
     if( C ){
-      return <div className="rtcontent"><C /></div>;
+      return <div className="rtcontent"><C tid={ this.props.tid } /></div>;
     }
 
     return <iframe src={ this.props.url } sandbox="allow-same-origin allow-scripts allow-popups allow-forms"/>;
@@ -176,6 +182,17 @@ class TileContent extends React.Component {
 
   shouldComponentUpdate(){
     return !this.props.updating;
+  }
+
+  componentWillReceiveProps( nextProps ){
+    if( nextProps.url === this.props.url ) return;
+    this.setState({
+      component: !this.isIframe(nextProps.url) && nextProps.resolver.resolve( nextProps.url )
+    })
+  }
+
+  isIframe( url ){
+    return !!url.match(/https?:\/\//i)
   }
 }
 
